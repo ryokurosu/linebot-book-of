@@ -1,5 +1,5 @@
 #!/bin/sh
-
+export DISPLAY=:0
 PROG_DIR=/home/root/app
 source $PROG_DIR/env/bin/activate
 
