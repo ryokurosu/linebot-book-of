@@ -17,5 +17,5 @@ def send_group_message(group_id,message_text):
         TextSendMessage(text=message_text))
 
 if __name__ == "__main__":
-    group_id = "C470f005f930f761475f92fb0ed5bab8e"
+    group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
     send_group_message(group_id,'hello')

@@ -13,22 +13,51 @@ import os
 import sys
 import message
 import traceback
+import fractions
 
 
-group_id = "C470f005f930f761475f92fb0ed5bab8e"
+group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 
 
-def check_rules(time, a_team, b_team, a_team_count, b_team_count, under, odds):
+def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
+	time_array = play_timer.split(':')
+	if int(time_array[0]) < 70:
+		print('Status : int(time_array[0]) < 70')
+		return False
+
+	if float(a_team_count) + float(b_team_count) + 4 > float(under):
+		print('Status : a_team_count + b_team_count + 4 > under')
+		return False
+
+	if odds > 1.05:
+		print('Status : odds > 1.05')
+		return False
+
+	if int(a_team_count) + int(b_team_count) > 4:
+		print('Status : a_team_count + b_team_count > 4')
+		return False
+
 	return True
 
+def check_notified(a_team, b_team, notified):
+	mylist = [a_team,b_team]
+	for n in notified:
+		if mylist == n:
+			return True
+		else:
+			pass
+	return False
 
-now = datetime.datetime.today().strftime("%Y-%m-%d %H-%M-%S")
+
+
 base = os.path.dirname(os.path.abspath(__file__))
 options = webdriver.ChromeOptions()
+mobile_emulation = {
+    "deviceMetrics": { "width": 1200, "height": 1600, "pixelRatio": 3.0 },
+    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1" }
 options.add_argument('--no-sandbox')
 options.add_argument('--lang=ja-JP')
-options.add_argument('--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.100 Safari/537.36')
-options.add_argument('--window-size=1920,1600')
+options.add_experimental_option("mobileEmulation", mobile_emulation)
 
 #Webdriver
 if os.name == 'nt':
@@ -38,28 +67,42 @@ else:
 
 
 
-startURL = "https://www.bet365.com/?nr=1#/IP/"
+startURL = "https://mobile.bet365.com/?nr=1#/IP/"
 browser.implicitly_wait(20)
 browser.get(startURL)
 print('Selenium start')
 
-time.sleep(3);
-
-alinks = browser.find_elements_by_css_selector('ul.lpnm a.lpdgl')
-for a in alinks:
-	if a.text == "English":
-		a.click
-		print('click English')
-		break
+time.sleep(1)
+notified = []
 
 
-time.sleep(3);
+# alinks = browser.find_elements_by_css_selector('ul.lpnm a.lpdgl')
+# for a in alinks:
+# 	if a.text == "English":
+# 		a.click
+# 		print('click English')
+# 		break
+matchgoal = False
+
+while (not matchgoal):
+	browser.find_element_by_css_selector('.ipo-MarketSwitcher').click()
+	time.sleep(1)
+	divs = browser.find_elements_by_css_selector('.ipo-MarketSwitcherRow')
+	for d in divs:
+		if "Match Goals" == d.find_element_by_css_selector('.ipo-MarketSwitcherRow_Label').text:
+			d.click()
+			matchgoal = True
+			break
+
+loopcount = 0
+time.sleep(1)
 browser.get(startURL)
-buttons = browser.find_elements_by_css_selector('.ipo-ClassificationBarButtonBase')
+
+buttons = browser.find_elements_by_css_selector('.ipo-Classification')
 # Soccer Click
 check = False
 for b in buttons:
-	classname = b.find_element_by_css_selector('.ipo-ClassificationBarButtonBase_Label').text
+	classname = b.find_element_by_css_selector('.ipo-Classification_Name').text
 	if 'Soccer' in classname:
 		b.click
 		print('go Soccer Page')
@@ -72,45 +115,88 @@ if not check:
 	browser.quit()
 	sys.exit()
 
-time.sleep(5)
-rows = browser.find_elements_by_css_selector('.ipo-Fixture_TableRow')
-for row in rows:
-	try:
-		teams = row.find_elements_by_css_selector('.ipo-TeamStack_Team')
-		scores = row.find_elements_by_css_selector('.ipo-TeamPoints_TeamScore')
-		markets = row.find_elements_by_css_selector('.ipo-MainMarketRenderer')
-		handicaps = row.find_elements_by_css_selector('.gll-ParticipantCentered_Handicap')
-
-		time = row.find_element_by_css_selector('.ipo-InPlayTimer').text
-		a_team = teams[0].find_element_by_css_selector('span').text
-		b_team = teams[1].find_element_by_css_selector('span').text
-		a_team_count = scores[0].text
-		b_team_count = scores[1].text
-
-		under = markets[2].find_elements_by_css_selector('.gll-ParticipantCentered_Handicap')[1].text.replace('U','').strip()
-		odds = markets[2].find_elements_by_css_selector('.gll-ParticipantCentered_Odds')[1].text
-
-		if check_rules(time, a_team, b_team, a_team_count, b_team_count, under, odds):
-			message_text = "[種目]サッカー\n"\
-                    "[試合]" + a_team + " VS " + b_team +  " II\n"\
-                    "[ベット対象]Match Goals\n"\
-                    "[カウント]" + str(under) + " under\n"\
-                    "[オッズ]" + str(odds) + "以下\n"\
-                    "[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
-                    "[時間]" + now + "\n"\
-                    "[URL]" + startURL
-			message.send_group_message(group_id,message_text)
-			print('send Line Message')
-			print(message_text)
-			print('-------------------------')
-
-	except Exception as e:
-		print(traceback.format_exc())
-		continue
-	else:
+while(True):
+	loopcount = loopcount + 1
+	if loopcount % 100 == 1:
+		now = datetime.datetime.today().strftime("%Y-%m-%d %H-%M-%S")
+		print("Time : " + now)
+		browser.get(startURL)
 		pass
-	finally:
-		pass
+
+
+
+	time.sleep(3)
+	rows = browser.find_elements_by_css_selector('.ipo-Fixture')
+	skip_count = 0
+	for row in rows:
+		if skip_count > 5:
+			break
+
+		try:
+			if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2:
+				skip_count = skip_count + 1
+				continue
+
+			teams = row.find_elements_by_css_selector('.ipo-Fixture_Truncator')
+			scores = row.find_elements_by_css_selector('.ipo-Fixture_PointField')
+			if len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2:
+				skip_count = skip_count + 1
+				continue
+
+			under = row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')[1].text.strip()
+			odds = row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')[1].text.strip()
+			if odds == "":
+				skip_count = skip_count + 1
+				continue
+
+			odds = 1 + float(fractions.Fraction(odds))
+			odds = round(odds,2)
+
+			play_timer = row.find_element_by_css_selector('.ipo-Fixture_GameInfo.ipo-Fixture_Time').text
+			a_team = teams[0].text
+			b_team = teams[1].text
+			a_team_count = scores[0].text
+			b_team_count = scores[1].text
+
+			if check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
+
+				row.click()
+				time.sleep(3)
+				current_url = browser.current_url
+				now = datetime.datetime.today().strftime("%Y-%m-%d %H-%M-%S")
+				# return url
+				browser.get(startURL)
+
+				message_text = "[種目]サッカー\n"\
+	                    "[試合]" + a_team + " VS " + b_team +  "\n"\
+	                    "[経過時間]" + play_timer +  "\n"\
+	                    "[ベット対象]Match Goals\n"\
+	                    "[カウント]" + str(under) + " under\n"\
+	                    "[オッズ]" + str(odds) + "以下\n"\
+	                    "[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
+	                    "[時間]" + now + "\n"\
+	                    "[URL]" + current_url
+				message.send_group_message(group_id,message_text)
+				print('send Line Message')
+				print(message_text)
+				print('-------------------------')
+
+				teamset = [a_team,b_team]
+				notified.append(teamset)
+				print("Notified Team List")
+				print(notified)
+				print("=========================")
+				break
+				
+
+		except Exception as e:
+			print(traceback.format_exc())
+			continue
+		else:
+			pass
+		finally:
+			pass
+	continue
 
 browser.quit()
 sys.exit()
