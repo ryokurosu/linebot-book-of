@@ -60,11 +60,12 @@ options.add_argument('--lang=ja-JP')
 options.add_experimental_option("mobileEmulation", mobile_emulation)
 
 #Webdriver
-if os.name == 'nt':
-	browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver.exe")),options=options)
-else:
-	browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver")),options=options)
+# if os.name == 'nt':
+# 	browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver.exe")),options=options)
+# else:
+# 	browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver")),options=options)
 
+browser = webdriver.Chrome(options=options)
 
 
 startURL = "https://mobile.bet365.com/?nr=1#/IP/"
