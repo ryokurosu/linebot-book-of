@@ -119,8 +119,8 @@ if not check:
 
 while(True):
 	loopcount = loopcount + 1
-	if loopcount % 2000 == 1:
-		now = datetime.datetime.today().strftime("%Y-%m-%d %H-%M-%S")
+	if loopcount % 100 == 1:
+		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
 		print(message_text)
 		message.send_group_message(group_id,message_text)
