@@ -15,7 +15,7 @@ import message
 import traceback
 import fractions
 
-version = "1.0.5"
+version = "1.0.6"
 group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 
 
