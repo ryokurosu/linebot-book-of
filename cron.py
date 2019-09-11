@@ -15,7 +15,7 @@ import message
 import traceback
 import fractions
 
-
+version = "1.0.5"
 group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 
 
@@ -48,6 +48,11 @@ def check_notified(a_team, b_team, notified):
 			pass
 	return False
 
+
+now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+message_text = "Time : " + now + " 起動しました Ver." + version
+print(message_text)
+message.send_group_message(group_id,message_text)
 
 
 base = os.path.dirname(os.path.abspath(__file__))
@@ -167,7 +172,7 @@ while(True):
 				row.click()
 				time.sleep(3)
 				current_url = browser.current_url
-				now = datetime.datetime.today().strftime("%Y-%m-%d %H-%M-%S")
+				now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 				# return url
 				browser.get(startURL)
 
