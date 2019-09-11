@@ -119,8 +119,10 @@ if not check:
 
 while(True):
 	loopcount = loopcount + 1
-	if loopcount % 10000 == 1:
-		print("Time : " + now)
+	if loopcount % 2000 == 1:
+		message_text = "Time : " + now + " 正常に稼働中..."
+		print(message_text)
+		message.send_group_message(group_id,message_text)
 		time.sleep(10)
 		pass
 
