@@ -57,6 +57,7 @@ mobile_emulation = {
     "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1" }
 options.add_argument('--no-sandbox')
 options.add_argument('--lang=ja-JP')
+options.add_argument("--incognito")
 options.add_experimental_option("mobileEmulation", mobile_emulation)
 
 #Webdriver
@@ -118,10 +119,9 @@ if not check:
 
 while(True):
 	loopcount = loopcount + 1
-	if loopcount % 100 == 1:
-		now = datetime.datetime.today().strftime("%Y-%m-%d %H-%M-%S")
+	if loopcount % 10000 == 1:
 		print("Time : " + now)
-		browser.get(startURL)
+		time.sleep(10)
 		pass
 
 
