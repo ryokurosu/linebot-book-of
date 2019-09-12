@@ -75,7 +75,7 @@ args = ['sudo', 'service', 'tor','restart']
 subprocess.call(args)
 
 
-PROXY = "socks5://localhost:9150"
+PROXY = "socks5://localhost:9050"
 
 uas = ["Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
 "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Mobile Safari/537.36",
