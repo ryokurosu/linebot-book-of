@@ -18,7 +18,7 @@ import traceback
 import fractions
 import subprocess
 
-version = "1.1.1"
+version = "1.1.2"
 group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
