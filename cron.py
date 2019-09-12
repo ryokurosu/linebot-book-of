@@ -18,8 +18,23 @@ import fractions
 version = "1.0.6"
 group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 
-
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
+
+	print('---------------------------')
+	print('【Check Rule】')
+
+	message_text = "[種目]サッカー\n"\
+	"[試合]" + a_team + " VS " + b_team +  "\n"\
+	"[経過時間]" + play_timer +  "\n"\
+	"[ベット対象]Match Goals\n"\
+	"[カウント]" + str(under) + " under\n"\
+	"[オッズ]" + str(odds) + "以下\n"\
+	"[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
+	"[時間]" + now + "\n"\
+
+	print(message_text)
+	print("\nJodge")
+
 	time_array = play_timer.split(':')
 	if int(time_array[0]) < 70:
 		print('Status : int(time_array[0]) < 70')
@@ -33,10 +48,11 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 		print('Status : odds > 1.05')
 		return False
 
-	if int(a_team_count) + int(b_team_count) > 4:
-		print('Status : a_team_count + b_team_count > 4')
+	if int(a_team_count) + int(b_team_count) >= 4:
+		print('Status : a_team_count + b_team_count >= 4')
 		return False
 
+	print('Send Message')
 	return True
 
 def check_notified(a_team, b_team, notified):
@@ -47,7 +63,6 @@ def check_notified(a_team, b_team, notified):
 		else:
 			pass
 	return False
-
 
 now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 message_text = "Time : " + now + " 起動しました Ver." + version
