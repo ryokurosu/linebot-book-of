@@ -8,6 +8,8 @@ export DISPLAY=:0
 PROG_DIR=/home/root/app
 
 cd $PROG_DIR
+git stash
+git stash clear
 git fetch
 git reset --hard origin/master
 
