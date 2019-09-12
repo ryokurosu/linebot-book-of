@@ -22,7 +22,7 @@ group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
 
 	print('---------------------------')
-	print('【Check Rule】')
+	print('[Check Rule]')
 
 	message_text = "[種目]サッカー\n"\
 	"[試合]" + a_team + " VS " + b_team +  "\n"\
