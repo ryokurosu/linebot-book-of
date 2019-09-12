@@ -14,6 +14,7 @@ import sys
 import message
 import traceback
 import fractions
+import subprocess
 
 version = "1.0.6"
 group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
@@ -69,6 +70,14 @@ message_text = "Time : " + now + " 起動しました Ver." + version
 print(message_text)
 message.send_group_message(group_id,message_text)
 
+args = ['sudo', 'service', 'tor','restart']
+subprocess.call(args)
+
+
+proxies = {
+        'http':'socks5://127.0.0.1:9050',
+        'https':'socks5://127.0.0.1:9050'
+        }
 
 base = os.path.dirname(os.path.abspath(__file__))
 options = webdriver.ChromeOptions()
@@ -78,6 +87,7 @@ mobile_emulation = {
 options.add_argument('--no-sandbox')
 options.add_argument('--lang=ja-JP')
 options.add_argument("--incognito")
+options.add_argument('--proxy-server=%s' % proxies)
 options.add_experimental_option("mobileEmulation", mobile_emulation)
 
 #Webdriver
