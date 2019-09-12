@@ -107,7 +107,7 @@ browser.implicitly_wait(20)
 browser.get(startURL)
 print('Selenium start')
 
-time.sleep(1)
+time.sleep(15)
 notified = []
 
 
@@ -119,15 +119,26 @@ notified = []
 # 		break
 matchgoal = False
 
-while (not matchgoal):
-	browser.find_element_by_css_selector('.ipo-MarketSwitcher').click()
-	time.sleep(1)
-	divs = browser.find_elements_by_css_selector('.ipo-MarketSwitcherRow')
-	for d in divs:
-		if "Match Goals" == d.find_element_by_css_selector('.ipo-MarketSwitcherRow_Label').text:
-			d.click()
-			matchgoal = True
-			break
+try:
+	while (not matchgoal):
+		browser.find_element_by_css_selector('.ipo-MarketSwitcher').click()
+		time.sleep(1)
+		divs = browser.find_elements_by_css_selector('.ipo-MarketSwitcherRow')
+		for d in divs:
+			if "Match Goals" == d.find_element_by_css_selector('.ipo-MarketSwitcherRow_Label').text:
+				d.click()
+				matchgoal = True
+				break
+except Exception as e:
+	message_text = "エラーで停止します。"
+	message.send_group_message(group_id,message_text)
+	browser.quit()
+	sys.exit()
+else:
+	pass
+finally:
+	pass
+
 
 loopcount = 0
 time.sleep(1)
