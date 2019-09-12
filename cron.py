@@ -87,6 +87,7 @@ options = webdriver.ChromeOptions()
 mobile_emulation = {
     "deviceMetrics": { "width": 1200, "height": 1600, "pixelRatio": 3.0 },
     "userAgent": uas[0] }
+options.add_argument('--no-sandbox')
 options.add_argument('--lang=ja-JP')
 options.add_argument("--incognito")
 options.add_argument('--proxy-server=%s' % PROXY)
