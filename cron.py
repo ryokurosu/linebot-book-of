@@ -23,40 +23,39 @@ group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
 
-	print('---------------------------')
-	print('[Check Rule]')
-
-	message_text = "[種目]サッカー\n"\
+	message_text = "---------------------------\n"\
+	"[Check Rule]\n"\
+	"[種目]サッカー\n"\
 	"[試合]" + a_team + " VS " + b_team +  "\n"\
 	"[経過時間]" + play_timer +  "\n"\
 	"[ベット対象]Match Goals\n"\
 	"[カウント]" + str(under) + " under\n"\
 	"[オッズ]" + str(odds) + "以下\n"\
 	"[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
-	"[時間]" + now + "\n"\
+	"[時間]" + now + "\n Jodge\n"\
 
-	print(message_text)
-	print("\nJodge")
+	check = True
 
 	time_array = play_timer.split(':')
 	if int(time_array[0]) < 70:
-		print('Status : int(time_array[0]) < 70')
-		return False
+		message_text = message_text + 'Status : int(time_array[0]) < 70'
+		check =  False
 
 	if float(a_team_count) + float(b_team_count) + 4 > float(under):
-		print('Status : a_team_count + b_team_count + 4 > under')
-		return False
+		message_text = message_text + 'Status : a_team_count + b_team_count + 4 > under'
+		check = False
 
 	if odds > 1.05:
-		print('Status : odds > 1.05')
-		return False
+		message_text = message_text + 'Status : odds > 1.05'
+		check =  False
 
 	if int(a_team_count) + int(b_team_count) >= 4:
-		print('Status : a_team_count + b_team_count >= 4')
-		return False
+		message_text = message_text + 'Status : a_team_count + b_team_count >= 4'
+		check = False
 
+	print(message_text)
 	print('Send Message')
-	return True
+	return check
 
 def check_notified(a_team, b_team, notified):
 	mylist = [a_team,b_team]
@@ -76,10 +75,7 @@ args = ['sudo', 'service', 'tor','restart']
 subprocess.call(args)
 
 
-proxies = {
-        'http':'socks5://127.0.0.1:9050',
-        'https':'socks5://127.0.0.1:9050'
-        }
+PROXY = "socks5://localhost:9050"
 
 uas = ["Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
 "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Mobile Safari/537.36",
@@ -91,7 +87,6 @@ options = webdriver.ChromeOptions()
 mobile_emulation = {
     "deviceMetrics": { "width": 1200, "height": 1600, "pixelRatio": 3.0 },
     "userAgent": uas[0] }
-options.add_argument('--no-sandbox')
 options.add_argument('--lang=ja-JP')
 options.add_argument("--incognito")
 options.add_argument('--proxy-server=%s' % proxies)
@@ -156,7 +151,7 @@ if not check:
 
 while(True):
 	loopcount = loopcount + 1
-	if loopcount % 100 == 1:
+	if loopcount % 30 == 1:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
 		print(message_text)
@@ -202,11 +197,12 @@ while(True):
 			if check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
 
 				row.click()
-				time.sleep(3)
+				time.sleep(10)
 				current_url = browser.current_url
 				now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 				# return url
 				browser.get(startURL)
+				time.sleep(10)
 
 				message_text = "[種目]サッカー\n"\
 	                    "[試合]" + a_team + " VS " + b_team +  "\n"\
