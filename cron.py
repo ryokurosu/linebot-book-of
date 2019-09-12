@@ -18,7 +18,7 @@ import traceback
 import fractions
 import subprocess
 
-version = "1.1.0"
+version = "1.1.1"
 group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
@@ -103,7 +103,7 @@ browser = webdriver.Chrome(options=options)
 
 
 startURL = "https://mobile.bet365.com/?nr=1#/IP/"
-browser.implicitly_wait(20)
+browser.implicitly_wait(60)
 browser.get(startURL)
 print('Selenium start')
 
@@ -141,7 +141,7 @@ finally:
 
 
 loopcount = 0
-time.sleep(1)
+time.sleep(10)
 browser.get(startURL)
 
 buttons = browser.find_elements_by_css_selector('.ipo-Classification')
