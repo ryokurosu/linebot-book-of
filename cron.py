@@ -79,11 +79,16 @@ proxies = {
         'https':'socks5://127.0.0.1:9050'
         }
 
+uas = ["Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
+"Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Mobile Safari/537.36",
+"Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1"]
+random.shuffle(uas)
+
 base = os.path.dirname(os.path.abspath(__file__))
 options = webdriver.ChromeOptions()
 mobile_emulation = {
     "deviceMetrics": { "width": 1200, "height": 1600, "pixelRatio": 3.0 },
-    "userAgent": "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1" }
+    "userAgent": uas[0] }
 options.add_argument('--no-sandbox')
 options.add_argument('--lang=ja-JP')
 options.add_argument("--incognito")
