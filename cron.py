@@ -132,6 +132,7 @@ try:
 except Exception as e:
 	message_text = "エラーで停止します。"
 	message.send_group_message(group_id,message_text)
+	time.sleep(300)
 	os.system("source ~/.bash_profile && sh /home/root/app/cron.sh")
 	browser.quit()
 	sys.exit()
