@@ -18,12 +18,12 @@ import traceback
 import fractions
 import subprocess
 
-version = "1.2.0"
+version = "1.2.1"
 group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
 
-	message_text = "---------------------------\n"\
+	message_text = "=======================\n"\
 	"[Check Rule]\n"\
 	"[種目]サッカー\n"\
 	"[試合]" + a_team + " VS " + b_team +  "\n"\
@@ -32,29 +32,29 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 	"[カウント]" + str(under) + " under\n"\
 	"[オッズ]" + str(odds) + "以下\n"\
 	"[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
-	"[時間]" + now + "\n Jodge\n"\
+	"[時間]" + now + "\n[Jodge]\n"\
 
 	check = True
 
 	time_array = play_timer.split(':')
 	if int(time_array[0]) < 70:
-		message_text = message_text + 'Status : int(time_array[0]) < 70'
+		message_text = message_text + "Status : int(time_array[0]) < 70\n"
 		check =  False
 
 	if float(a_team_count) + float(b_team_count) + 4 > float(under):
-		message_text = message_text + 'Status : a_team_count + b_team_count + 4 > under'
+		message_text = message_text + "Status : a_team_count + b_team_count + 4 > under\n"
 		check = False
 
 	if odds > 1.05:
-		message_text = message_text + 'Status : odds > 1.05'
+		message_text = message_text + "Status : odds > 1.05\n"
 		check =  False
 
 	if int(a_team_count) + int(b_team_count) >= 4:
-		message_text = message_text + 'Status : a_team_count + b_team_count >= 4'
+		message_text = message_text + "Status : a_team_count + b_team_count >= 4\n"
 		check = False
 
+	message_text = "\n=======================\n"\
 	print(message_text)
-	print('Send Message')
 	return check
 
 def check_notified(a_team, b_team, notified):
