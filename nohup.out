@@ -1,0 +1,6 @@
+No matching processes belonging to you were found
+No matching processes belonging to you were found
+cron.sh: line 10: cd: /home/root/app: No such file or directory
+No local changes to save
+HEAD is now at de05ea4 add
+cron.sh: line 16: /home/root/app/env/bin/activate: No such file or directory
