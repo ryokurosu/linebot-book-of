@@ -7,15 +7,25 @@ from linebot.exceptions import (
 from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 
-line_bot_api = LineBotApi('RcIMrnirObeEFmUB1qe6BkJz9m/j2TGrXgKBF1F5LiOmN5DAfpAwBGuvw0oKMrMaffqW87e6DEduOdnRP0fGaAHch6RUFt/IfBlmSSsiuTlo2FnGKgbV2hkoFk5wP9x7WzA+EH3xl6468DORWN0mSAdB04t89/1O/w1cDnyilFU=')
-handler = WebhookHandler('25e6e3b41f6c2c31de0ed49c9ae04fd4')
+load_dotenv(verbose=True)
+
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+line_bot_api = LineBotApi(os.environ.get("ACCESS_TOKEN"))
+handler = WebhookHandler(os.environ.get("CHANNEL_ID"))
 
 def send_group_message(group_id,message_text):
     line_bot_api.push_message(
         group_id,
         TextSendMessage(text=message_text))
 
+def send_all_message(message_text):
+    line_bot_api.broadcast(TextSendMessage(text=message_text))
+
 if __name__ == "__main__":
-    group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
-    send_group_message(group_id,'hello')
+    send_all_message('hello')

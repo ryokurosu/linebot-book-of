@@ -8,10 +8,7 @@ killall chrome
 PROG_DIR=`dirname $0`
 
 cd $PROG_DIR
-git stash
-git stash clear
-git fetch
-git reset --hard origin/master
+git pull origin master
 
 source $PROG_DIR/env/bin/activate
 nohup python3 $PROG_DIR/cron.py > $PROG_DIR/logs/`date +%Y%m%d_%H%M%S`.log &
