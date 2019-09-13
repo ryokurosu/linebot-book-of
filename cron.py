@@ -89,7 +89,7 @@ mobile_emulation = {
     "userAgent": uas[0] }
 options.add_argument('--no-sandbox')
 options.add_argument('--lang=ja-JP')
-options.add_argument("--incognito")
+# options.add_argument("--incognito")
 options.add_argument('--proxy-server=%s' % PROXY)
 options.add_experimental_option("mobileEmulation", mobile_emulation)
 
