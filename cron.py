@@ -53,7 +53,7 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 		message_text = message_text + "Status : a_team_count + b_team_count >= 4\n"
 		check = False
 
-	message_text = "\n=======================\n"\
+	message_text = "\n=======================\n"
 	print(message_text)
 	return check
 
