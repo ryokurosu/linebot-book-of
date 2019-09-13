@@ -17,8 +17,20 @@ import message
 import traceback
 import fractions
 import subprocess
+from logging import getLogger, StreamHandler, DEBUG, FileHandler, Formatter
 
-version = "1.2.1"
+nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
+logger = getLogger(__name__)
+handler = StreamHandler()
+handler = FileHandler(filename="./logs/" + nowdate + ".log")
+handler.setLevel(DEBUG)
+handler.setFormatter(Formatter("%(asctime)s %(levelname)8s %(message)s"))
+logger.setLevel(DEBUG)
+logger.addHandler(handler)
+logger.propagate = False
+
+
+version = "1.2.2"
 group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
@@ -54,7 +66,8 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 		check = False
 
 	message_text = "\n=======================\n"
-	print(message_text)
+	logger.debug(message_text)
+	# print(message_text)
 	return check
 
 def check_notified(a_team, b_team, notified):
@@ -68,7 +81,7 @@ def check_notified(a_team, b_team, notified):
 
 now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 message_text = "Time : " + now + " 起動しました Ver." + version
-print(message_text)
+logger.debug(message_text)
 message.send_group_message(group_id,message_text)
 
 
@@ -106,7 +119,7 @@ browser.implicitly_wait(60)
 browser.get(firstURL)
 time.sleep(5)
 browser.get(startURL)
-print('Selenium start')
+logger.debug(message_text)
 
 time.sleep(5)
 notified = []
@@ -133,6 +146,7 @@ try:
 except Exception as e:
 	message_text = "エラーで停止します。"
 	message.send_group_message(group_id,message_text)
+	logger.debug(message_text)
 	time.sleep(5)
 	# os.system("source ~/.bash_profile && sh /home/root/app/cron.sh")
 	browser.quit()
@@ -154,7 +168,7 @@ for b in buttons:
 	classname = b.find_element_by_css_selector('.ipo-Classification_Name').text
 	if 'Soccer' in classname:
 		b.click
-		print('go Soccer Page')
+		logger.debug('go Soccer Page')
 		check = True
 		break
 
@@ -169,7 +183,7 @@ while(True):
 	if loopcount % 30 == 1:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
-		print(message_text)
+		logger.debug(message_text)
 		message.send_group_message(group_id,message_text)
 		time.sleep(5)
 		pass
@@ -229,9 +243,8 @@ while(True):
 	                    "[時間]" + now + "\n"\
 	                    "[URL]" + current_url
 				message.send_group_message(group_id,message_text)
-				print('send Line Message')
-				print(message_text)
-				print('-------------------------')
+				logger.debug('send Line Message')
+				logger.debug(message_text)
 
 				teamset = [a_team,b_team]
 				notified.append(teamset)
