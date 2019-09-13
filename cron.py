@@ -18,7 +18,7 @@ import traceback
 import fractions
 import subprocess
 
-version = "1.1.3"
+version = "1.2.0"
 group_id = "C4ce182dcef4600d7f693f87ce040c7ab"
 
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
@@ -71,31 +71,25 @@ message_text = "Time : " + now + " 起動しました Ver." + version
 print(message_text)
 message.send_group_message(group_id,message_text)
 
-args = ['sudo', 'service', 'tor','restart']
-subprocess.call(args)
 
-
-PROXY = "socks5://localhost:9050"
-
-uas = ["Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
+uas = ["Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1",
+"Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
 "Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Mobile Safari/537.36",
-"Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1",
 "Mozilla/5.0 (Linux; U; Android 4.3; en-us; SM-N900T Build/JSS15J) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
 "Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Mobile Safari/537.36"]
-random.shuffle(uas)
+# random.shuffle(uas)
 
 base = os.path.dirname(os.path.abspath(__file__))
 options = webdriver.ChromeOptions()
 mobile_emulation = {
-    "deviceMetrics": { "width": 375, "height": 812, "pixelRatio": 3.0 },
+    "deviceMetrics": { "width": 1024, "height": 1366, "pixelRatio": 3.0 },
     "userAgent": uas[0] }
 options.add_argument('--no-sandbox')
-# options.add_argument('--lang=ja-JP')
+options.add_argument('--lang=ja-JP')
 options.add_argument("--incognito")
-# options.add_argument('--proxy-server=%s' % PROXY)
 options.add_experimental_option("mobileEmulation", mobile_emulation)
-options.add_experimental_option("excludeSwitches", ["enable-automation"])
-options.add_experimental_option('useAutomationExtension', False)
+# options.add_experimental_option("excludeSwitches", ["enable-automation"])
+# options.add_experimental_option('useAutomationExtension', False)
 
 #Webdriver
 # if os.name == 'nt':
@@ -140,7 +134,7 @@ except Exception as e:
 	message_text = "エラーで停止します。"
 	message.send_group_message(group_id,message_text)
 	time.sleep(300)
-	os.system("source ~/.bash_profile && sh /home/root/app/cron.sh")
+	# os.system("source ~/.bash_profile && sh /home/root/app/cron.sh")
 	browser.quit()
 	sys.exit()
 else:

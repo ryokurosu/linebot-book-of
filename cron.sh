@@ -4,8 +4,6 @@ killall python
 killall chromedriver
 killall chrome
 
-sleep 15
-
 export DISPLAY=:0
 PROG_DIR=/home/root/app
 
