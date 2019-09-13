@@ -16,5 +16,4 @@ git fetch
 git reset --hard origin/master
 
 source $PROG_DIR/env/bin/activate
-
 python $PROG_DIR/cron.py > $PROG_DIR/logs/`date +%Y%m%d_%H%M%S`.log
