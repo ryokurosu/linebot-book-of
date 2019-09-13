@@ -100,7 +100,7 @@ options.add_experimental_option("mobileEmulation", mobile_emulation)
 # 	browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver")),options=options)
 
 browser = webdriver.Chrome(options=options)
-
+time.sleep(5)
 
 startURL = "https://mobile.bet365.com/?nr=1#/IP/"
 browser.implicitly_wait(60)
