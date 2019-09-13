@@ -100,11 +100,12 @@ options.add_experimental_option("mobileEmulation", mobile_emulation)
 browser = webdriver.Chrome(options=options)
 time.sleep(5)
 browser.get("https://www.google.com/?hl=ja")
-
+time.sleep(5)
 firstURL = "https://mobile.bet365.com/"
 startURL = "https://mobile.bet365.com/?nr=1#/IP/"
 browser.implicitly_wait(60)
 browser.get(firstURL)
+time.sleep(5)
 browser.get(startURL)
 print('Selenium start')
 
