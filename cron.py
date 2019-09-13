@@ -217,7 +217,7 @@ while(True):
 				current_url = browser.current_url
 				now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 				# return url
-				browser.get(startURL)
+				browser.back()
 				time.sleep(10)
 
 				message_text = "[種目]サッカー\n"\
