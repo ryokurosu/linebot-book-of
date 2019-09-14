@@ -32,7 +32,7 @@ logger.propagate = False
 version = "1.3.1"
 
 def logger_set():
-	nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S%S")
+	nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
 	logger = getLogger(__name__)
 	handler = StreamHandler()
 	handler = FileHandler(filename="./logs/" + nowdate + ".log")
