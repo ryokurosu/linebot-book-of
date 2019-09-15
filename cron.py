@@ -46,7 +46,7 @@ def logger_set():
 
 
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
-
+	now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 	message_text = "=======================\n"\
 	"[Check Rule]\n"\
 	"[種目]サッカー\n"\
