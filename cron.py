@@ -124,16 +124,16 @@ options.add_experimental_option("mobileEmulation", mobile_emulation)
 
 browser = webdriver.Chrome(options=options)
 browser.get("https://www.google.com/?hl=ja")
-time.sleep(2.5)
+time.sleep(0.5)
 firstURL = "https://mobile.bet365.com/"
 startURL = "https://mobile.bet365.com/?nr=1#/IP/"
 browser.implicitly_wait(60)
 browser.get(firstURL)
-time.sleep(2.5)
+time.sleep(0.5)
 browser.get(startURL)
 logger.debug(message_text)
 
-time.sleep(2.5)
+time.sleep(0.5)
 notified = []
 
 
@@ -148,7 +148,7 @@ matchgoal = False
 try:
 	while (not matchgoal):
 		browser.find_element_by_css_selector('.ipo-MarketSwitcher').click()
-		time.sleep(2.5)
+		time.sleep(0.5)
 		divs = browser.find_elements_by_css_selector('.ipo-MarketSwitcherRow')
 		for d in divs:
 			if "Match Goals" == d.find_element_by_css_selector('.ipo-MarketSwitcherRow_Label').text:
@@ -159,7 +159,7 @@ except Exception as e:
 	message_text = "エラーで停止します。"
 	message.send_all_message(message_text)
 	logger.debug(message_text)
-	time.sleep(2.5)
+	time.sleep(0.5)
 	# os.system("source ~/.bash_profile && sh /home/root/app/cron.sh")
 	browser.quit()
 	sys.exit()
@@ -170,7 +170,7 @@ finally:
 
 
 loopcount = 0
-time.sleep(2.5)
+time.sleep(0.5)
 browser.get(startURL)
 
 buttons = browser.find_elements_by_css_selector('.ipo-Classification')
@@ -197,13 +197,13 @@ while(True):
 		message_text = "Time : " + now + " 正常に稼働中..."
 		logger.debug(message_text)
 		message.send_all_message(message_text)
-		time.sleep(2.5)
+		time.sleep(0.5)
 		logger_set()
 		pass
 
 
 
-	time.sleep(2.5)
+	time.sleep(0.5)
 	rows = browser.find_elements_by_css_selector('.ipo-Fixture')
 	skip_count = 0
 	for row in rows:
@@ -239,12 +239,12 @@ while(True):
 			if check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
 
 				row.click()
-				time.sleep(2.5)
+				time.sleep(1)
 				current_url = browser.current_url
 				now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 				# return url
 				browser.back()
-				time.sleep(2.5)
+				time.sleep(1)
 
 				message_text = "[種目]サッカー\n"\
 	                    "[試合]" + a_team + " VS " + b_team +  "\n"\
