@@ -124,16 +124,16 @@ options.add_experimental_option("mobileEmulation", mobile_emulation)
 
 browser = webdriver.Chrome(options=options)
 browser.get("https://www.google.com/?hl=ja")
-time.sleep(0.5)
+time.sleep(1)
 firstURL = "https://mobile.bet365.com/"
 startURL = "https://mobile.bet365.com/?nr=1#/IP/"
 browser.implicitly_wait(60)
 browser.get(firstURL)
-time.sleep(0.5)
+time.sleep(1)
 browser.get(startURL)
 logger.debug(message_text)
 
-time.sleep(0.5)
+time.sleep(1)
 notified = []
 
 
@@ -148,7 +148,7 @@ matchgoal = False
 try:
 	while (not matchgoal):
 		browser.find_element_by_css_selector('.ipo-MarketSwitcher').click()
-		time.sleep(0.5)
+		time.sleep(1)
 		divs = browser.find_elements_by_css_selector('.ipo-MarketSwitcherRow')
 		for d in divs:
 			if "Match Goals" == d.find_element_by_css_selector('.ipo-MarketSwitcherRow_Label').text:
@@ -159,7 +159,7 @@ except Exception as e:
 	message_text = "エラーで停止します。"
 	message.send_all_message(message_text)
 	logger.debug(message_text)
-	time.sleep(0.5)
+	time.sleep(1)
 	# os.system("source ~/.bash_profile && sh /home/root/app/cron.sh")
 	browser.quit()
 	sys.exit()
@@ -170,7 +170,7 @@ finally:
 
 
 loopcount = 0
-time.sleep(0.5)
+time.sleep(1)
 browser.get(startURL)
 
 buttons = browser.find_elements_by_css_selector('.ipo-Classification')
@@ -197,7 +197,7 @@ while(True):
 		message_text = "Time : " + now + " 正常に稼働中..."
 		logger.debug(message_text)
 		message.send_all_message(message_text)
-		time.sleep(0.5)
+		time.sleep(1)
 		logger_set()
 		pass
 
@@ -211,6 +211,7 @@ while(True):
 			break
 
 		try:
+			logger.debug(str(len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator'))))
 			if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2:
 				skip_count = skip_count + 1
 				continue
