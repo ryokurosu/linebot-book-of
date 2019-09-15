@@ -127,7 +127,7 @@ browser.get("https://www.google.com/?hl=ja")
 time.sleep(1)
 firstURL = "https://mobile.bet365.com/"
 startURL = "https://mobile.bet365.com/?nr=1#/IP/"
-browser.implicitly_wait(60)
+browser.implicitly_wait(5)
 browser.get(firstURL)
 time.sleep(1)
 browser.get(startURL)
@@ -203,7 +203,7 @@ while(True):
 
 
 
-	time.sleep(0.5)
+	time.sleep(1)
 	rows = browser.find_elements_by_css_selector('.ipo-Fixture')
 	skip_count = 0
 	for row in rows:
@@ -212,21 +212,19 @@ while(True):
 
 		try:
 			logger.debug(str(len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator'))))
-			if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2:
+
+			if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2 and 
+			len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2 and 
+			len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) > 0 and 
+			len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')) > 0:
 				skip_count = skip_count + 1
 				continue
 
 			teams = row.find_elements_by_css_selector('.ipo-Fixture_Truncator')
 			scores = row.find_elements_by_css_selector('.ipo-Fixture_PointField')
-			if len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2:
-				skip_count = skip_count + 1
-				continue
 
 			under = row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')[1].text.strip()
 			odds = row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')[1].text.strip()
-			if odds == "":
-				skip_count = skip_count + 1
-				continue
 
 			odds = 1 + float(fractions.Fraction(odds))
 			odds = round(odds,2)
