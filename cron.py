@@ -213,10 +213,7 @@ while(True):
 		try:
 			logger.debug(str(len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator'))))
 
-			if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2 and 
-			len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2 and 
-			len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) > 0 and 
-			len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')) > 0:
+			if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) > 0 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')) > 0:
 				skip_count = skip_count + 1
 				continue
 
