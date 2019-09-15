@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.3.1"
+version = "1.3.3"
 
 def logger_set():
 	nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
@@ -192,6 +192,7 @@ if not check:
 
 while(True):
 	loopcount = loopcount + 1
+	logger.debug("===============Loop Count : " + str(loopcount))
 	if loopcount % 100 == 1:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
@@ -211,8 +212,6 @@ while(True):
 			break
 
 		try:
-			logger.debug(str(len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator'))))
-
 			if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) > 0 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')) > 0:
 				skip_count = skip_count + 1
 				continue
@@ -242,7 +241,8 @@ while(True):
 				browser.back()
 				time.sleep(1)
 
-				message_text = "[種目]サッカー\n"\
+				message_text = "------------\nベット対象通知\n------------\n"\
+						"[種目]サッカー\n"\
 	                    "[試合]" + a_team + " VS " + b_team +  "\n"\
 	                    "[経過時間]" + play_timer +  "\n"\
 	                    "[ベット対象]Match Goals\n"\
