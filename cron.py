@@ -61,8 +61,8 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 	check = True
 
 	time_array = play_timer.split(':')
-	if int(time_array[0]) < 70:
-		message_text = message_text + "Status : int(time_array[0]) < 70\n"
+	if int(time_array[0]) < 60:
+		message_text = message_text + "Status : int(time_array[0]) < 60\n"
 		check =  False
 
 	if float(a_team_count) + float(b_team_count) + 4 > float(under):
