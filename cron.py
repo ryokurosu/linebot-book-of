@@ -193,12 +193,11 @@ if not check:
 while(True):
 	loopcount = loopcount + 1
 	logger.debug("===============Loop Count : " + str(loopcount))
-	if loopcount % 50 == 1:
+	if loopcount % 100 == 1:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
 		logger.debug(message_text)
 		message.send_debug_message(message_text)
-		time.sleep(1)
 		logger_set()
 		check = False
 		while(not check):
@@ -214,19 +213,17 @@ while(True):
 		pass
 
 
-
-	time.sleep(1)
 	rows = browser.find_elements_by_css_selector('.ipo-Fixture')
 	skip_count = 0
 	for row in rows:
-		if skip_count > 5:
+		if skip_count > 3:
 			break
 
 		try:
 			if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) > 0 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')) > 0:
 				skip_count = skip_count + 1
 				continue
-
+			skip_count = 0
 			teams = row.find_elements_by_css_selector('.ipo-Fixture_Truncator')
 			scores = row.find_elements_by_css_selector('.ipo-Fixture_PointField')
 
@@ -245,7 +242,6 @@ while(True):
 			if check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
 
 				row.click()
-				time.sleep(1)
 				current_url = browser.current_url
 				now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 				# return url
@@ -275,6 +271,7 @@ while(True):
 				
 
 		except Exception as e:
+			skip_count = skip_count + 1
 			print(traceback.format_exc())
 			continue
 		else:
