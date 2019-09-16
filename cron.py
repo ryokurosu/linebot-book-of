@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.3.7"
+version = "1.3.8"
 
 def logger_set():
 	nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
@@ -74,7 +74,7 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 		check =  False
 
 	if int(a_team_count) + int(b_team_count) >= 5:
-		message_text = message_text + "Status : a_team_count + b_team_count >= 4\n"
+		message_text = message_text + "Status : a_team_count + b_team_count >= 5\n"
 		check = False
 
 	message_text = message_text + "\n=======================\n"
@@ -244,12 +244,15 @@ while(True):
 
 			if check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
 
+				message.send_debug_message("HIT!")
+				
 				row.click()
+				time.sleep(2)
 				current_url = browser.current_url
 				now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 				# return url
 				browser.back()
-				time.sleep(1)
+				time.sleep(2)
 
 				message_text = "------------\nベット対象通知\n------------\n"\
 						"[種目]サッカー\n"\
