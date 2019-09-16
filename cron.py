@@ -73,7 +73,7 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 		message_text = message_text + "Status : odds > 1.05\n"
 		check =  False
 
-	if int(a_team_count) + int(b_team_count) >= 4:
+	if int(a_team_count) + int(b_team_count) >= 5:
 		message_text = message_text + "Status : a_team_count + b_team_count >= 4\n"
 		check = False
 
