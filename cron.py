@@ -191,6 +191,7 @@ if not check:
 	sys.exit()
 
 while(True):
+	time.sleep(0.5)
 	loopcount = loopcount + 1
 	logger.debug("===============Loop Count : " + str(loopcount))
 	if loopcount % 300 == 1:
@@ -200,6 +201,7 @@ while(True):
 		message.send_debug_message(message_text)
 		logger_set()
 		check = False
+		time.sleep(1)
 		while(not check):
 			logger.debug('Searching Soccer...')
 			buttons = browser.find_elements_by_css_selector('.ipo-Classification')
