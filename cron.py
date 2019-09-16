@@ -127,7 +127,7 @@ browser.get("https://www.google.com/?hl=ja")
 time.sleep(1)
 firstURL = "https://mobile.bet365.com/"
 startURL = "https://mobile.bet365.com/?nr=1#/IP/"
-browser.implicitly_wait(5)
+browser.implicitly_wait(3)
 browser.get(firstURL)
 time.sleep(1)
 browser.get(startURL)
@@ -212,7 +212,7 @@ while(True):
 		
 		pass
 
-
+	browser.implicitly_wait(3)
 	rows = browser.find_elements_by_css_selector('.ipo-Fixture')
 	skip_count = 0
 	for row in rows:
@@ -222,6 +222,7 @@ while(True):
 		try:
 			if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) > 0 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')) > 0:
 				skip_count = skip_count + 1
+				browser.implicitly_wait(0.5)
 				continue
 			skip_count = 0
 			teams = row.find_elements_by_css_selector('.ipo-Fixture_Truncator')
