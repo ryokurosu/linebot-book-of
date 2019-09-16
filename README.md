@@ -10,4 +10,4 @@
 
 ## プログラムのインストール
 
-- `git clone https://github.com/ryokurosu/linebot-book.git`
+- `git clone https://github.com/ryokurosu/linebot-book-of.git`
