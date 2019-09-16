@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.3.3"
+version = "1.3.5"
 
 def logger_set():
 	nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
@@ -94,7 +94,7 @@ def check_notified(a_team, b_team, notified):
 now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 message_text = "Time : " + now + " 起動しました Ver." + version
 logger.debug(message_text)
-message.send_all_message(message_text)
+# message.send_all_message(message_text)
 
 
 uas = ["Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1",
@@ -157,7 +157,7 @@ try:
 				break
 except Exception as e:
 	message_text = "エラーで停止します。"
-	message.send_all_message(message_text)
+	# message.send_all_message(message_text)
 	logger.debug(message_text)
 	time.sleep(1)
 	# os.system("source ~/.bash_profile && sh /home/root/app/cron.sh")
@@ -197,7 +197,7 @@ while(True):
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
 		logger.debug(message_text)
-		message.send_all_message(message_text)
+		# message.send_all_message(message_text)
 		time.sleep(1)
 		logger_set()
 		check = False
