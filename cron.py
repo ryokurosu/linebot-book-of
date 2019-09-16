@@ -262,6 +262,7 @@ while(True):
 	                    "[時間]" + now + "\n"\
 	                    "[URL]" + current_url
 				message.send_all_message(message_text)
+				message.send_debug_message(message_text)
 				logger.debug('send Line Message')
 				logger.debug(message_text)
 
