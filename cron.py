@@ -213,7 +213,8 @@ while(True):
 		pass
 
 	browser.implicitly_wait(3)
-	rows = browser.find_elements_by_css_selector('.ipo-Fixture')
+	rows = browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')
+	logger.debug(str(len(rows)))
 	skip_count = 0
 	for row in rows:
 		if skip_count > 3:
