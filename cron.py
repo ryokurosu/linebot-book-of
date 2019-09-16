@@ -200,6 +200,17 @@ while(True):
 		message.send_all_message(message_text)
 		time.sleep(1)
 		logger_set()
+		check = False
+		while(!check):
+			buttons = browser.find_elements_by_css_selector('.ipo-Classification')
+			for b in buttons:
+				classname = b.find_element_by_css_selector('.ipo-Classification_Name').text
+				if 'Soccer' in classname:
+					b.click
+					logger.debug('go Soccer Page')
+					check = True
+					break
+		
 		pass
 
 
