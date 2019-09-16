@@ -122,7 +122,7 @@ options.add_experimental_option("mobileEmulation", mobile_emulation)
 # else:
 # 	browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver")),options=options)
 
-browser = webdriver.Chrome(options=options)
+browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver")),options=options)
 browser.get("https://www.google.com/?hl=ja")
 time.sleep(1)
 firstURL = "https://mobile.bet365.com/"
