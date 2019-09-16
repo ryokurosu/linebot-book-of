@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.3.5"
+version = "1.3.6"
 
 def logger_set():
 	nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
