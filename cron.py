@@ -24,12 +24,12 @@ logger = getLogger(__name__)
 handler = StreamHandler()
 handler = FileHandler(filename="./logs/" + nowdate + ".log")
 handler.setLevel(DEBUG)
-handler.setFormatter(Formatter("%(asctime)s %(levelname)8s %(message)s"))
+handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s"))
 logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.4.1"
+version = "1.4.2"
 
 filter_time = 60;
 filter_count_under = 4;
@@ -95,7 +95,6 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 		message_text = message_text + "Status : a_team_count + b_team_count >= " + str(filter_count) + "\n"
 		check = False
 
-	message_text = message_text + "\n=======================\n"
 	logger.debug(message_text)
 	# print(message_text)
 	return check
