@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.3.8"
+version = "1.4.0"
 
 filter_time = 60;
 filter_count_under = 4;
@@ -195,6 +195,8 @@ if not check:
 	browser.quit()
 	sys.exit()
 
+
+row_index = 0
 while(True):
 	time.sleep(0.5)
 	loopcount = loopcount + 1
@@ -220,46 +222,51 @@ while(True):
 		pass
 
 	browser.implicitly_wait(3)
-	rows = browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')
 	skip_count = 0
-	for row in rows:
-		if skip_count > 3:
-			break
+	
+	rows = browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')
+	if len(rows) <= row_index:
+		row_index = 0
+	row = rows[row_index]
+	row_index = row_index + 1
 
+	if skip_count > 3:
+		break
+
+	try:
+		if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) > 0 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')) > 0:
+			skip_count = skip_count + 1
+			browser.implicitly_wait(0.5)
+			continue
+		skip_count = 0
+		teams = row.find_elements_by_css_selector('.ipo-Fixture_Truncator')
+		scores = row.find_elements_by_css_selector('.ipo-Fixture_PointField')
+		a_team = teams[0].text
+		b_team = teams[1].text
+		a_team_count = scores[0].text
+		b_team_count = scores[1].text
+		play_timer = row.find_element_by_css_selector('.ipo-Fixture_GameInfo.ipo-Fixture_Time').text
 		try:
-			if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) > 0 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')) > 0:
+			row.click()
+			if len(browser.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')) < 1 and len(browser.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')) < 1:
 				skip_count = skip_count + 1
 				browser.implicitly_wait(0.5)
+				browser.back()
 				continue
-			skip_count = 0
-			teams = row.find_elements_by_css_selector('.ipo-Fixture_Truncator')
-			scores = row.find_elements_by_css_selector('.ipo-Fixture_PointField')
-			a_team = teams[0].text
-			b_team = teams[1].text
-			a_team_count = scores[0].text
-			b_team_count = scores[1].text
-			play_timer = row.find_element_by_css_selector('.ipo-Fixture_GameInfo.ipo-Fixture_Time').text
-			try:
-				row.click()
-				if len(browser.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')) < 1 and len(browser.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')) < 1
-					skip_count = skip_count + 1
-					browser.implicitly_wait(0.5)
-					browser.back()
-					continue
-				under_array = browser.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')
-				odds_array = browser.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')
-				for i in range(len(under_array)):
-					u = under_array[i].text
-					o = odds_array[i].text
-					o = 1 + float(fractions.Fraction(o))
-					o = round(o,2)
+			under_array = browser.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')
+			odds_array = browser.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')
+			for i in range(len(under_array)):
+				u = under_array[i].text
+				o = odds_array[i].text
+				o = 1 + float(fractions.Fraction(o))
+				o = round(o,2)
 
-					if u > filter_count_under and o <= filter_odds and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
+				if u > filter_count_under and o <= filter_odds and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
 
-						message.send_debug_message("HIT!")
-						current_url = browser.current_url
-						now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-						message_text = "------------\nベット対象通知\n------------\n"\
+					message.send_debug_message("HIT!")
+					current_url = browser.current_url
+					now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+					message_text = "------------\nベット対象通知\n------------\n"\
 									"[種目]サッカー\n"\
 				                    "[試合]" + a_team + " VS " + b_team +  "\n"\
 				                    "[経過時間]" + play_timer +  "\n"\
@@ -269,34 +276,34 @@ while(True):
 				                    "[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
 				                    "[時間]" + now + "\n"\
 				                    "[URL]" + current_url
-						message.send_all_message(message_text)
-						message.send_debug_message(message_text)
-						logger.debug('send Line Message')
-						logger.debug(message_text)
+					message.send_all_message(message_text)
+					message.send_debug_message(message_text)
+					logger.debug('send Line Message')
+					logger.debug(message_text)
 
-						teamset = [a_team,b_team]
-						notified.append(teamset)
-						print("Notified Team List")
-						print(notified)
-						print("=========================")
-						browser.back()
-						continue
-
-			except Exception as e:
-				browser.back()
-			else:
-				pass
-			finally:
-				pass
+					teamset = [a_team,b_team]
+					notified.append(teamset)
+					print("Notified Team List")
+					print(notified)
+					print("=========================")
+					browser.back()
+					continue
 
 		except Exception as e:
-			skip_count = skip_count + 1
-			print(traceback.format_exc())
-			continue
+			browser.back()
 		else:
 			pass
 		finally:
 			pass
+
+	except Exception as e:
+		skip_count = skip_count + 1
+		print(traceback.format_exc())
+		continue
+	else:
+		pass
+	finally:
+		pass
 	continue
 
 browser.quit()
