@@ -24,7 +24,7 @@ logger = getLogger(__name__)
 handler = StreamHandler()
 handler = FileHandler(filename="./logs/" + nowdate + ".log")
 handler.setLevel(DEBUG)
-handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s\n"))
+handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s"))
 logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
@@ -43,7 +43,7 @@ def logger_set():
 	handler = StreamHandler()
 	handler = FileHandler(filename="./logs/" + nowdate + ".log")
 	handler.setLevel(DEBUG)
-	handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s\n"))
+	handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s"))
 	logger.setLevel(DEBUG)
 	logger.addHandler(handler)
 	logger.propagate = False
@@ -57,7 +57,7 @@ def timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
 		"[試合]" + a_team + " VS " + b_team +  "\n"\
 		"[経過時間]" + play_timer +  "\n"\
 		"[ベット対象]Alternative Match Goals\n"\
-		"[時間]" + now + "\n[Jodge]Timer Check\n"
+		"[時間]" + now + "\n[Jodge]Timer Check"
 		logger.debug(message_text)
 		return False
 	return True
