@@ -48,6 +48,21 @@ def logger_set():
 	logger.addHandler(handler)
 	logger.propagate = False
 
+def timer_check(a_team,b_team,b_team_count,b_team_count,play_timer):
+	time_array = play_timer.split(':')
+	if int(time_array[0]) < filter_time:
+		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+		message_text = "\n"\
+		"[Check Rule]\n"\
+		"[種目]サッカー\n"\
+		"[試合]" + a_team + " VS " + b_team +  "\n"\
+		"[経過時間]" + play_timer +  "\n"\
+		"[ベット対象]Alternative Match Goals\n"\
+		"[時間]" + now + "\n[Jodge]Timer Check\n"
+		logger.debug(message_text)
+		return False
+	return True
+
 
 def easy_check(play_timer,a_team,b_team,under,odds):
 	if float(under) < filter_count_under and odds > filter_odds:
@@ -78,18 +93,18 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 
 	check = True
 
-	time_array = play_timer.split(':')
-	if int(time_array[0]) < filter_time:
-		message_text = message_text + "Status : int(time_array[0]) < " + str(filter_time) + "\n"
-		check =  False
+	# time_array = play_timer.split(':')
+	# if int(time_array[0]) < filter_time:
+	# 	message_text = message_text + "Status : int(time_array[0]) < " + str(filter_time) + "\n"
+	# 	check =  False
 
 	if float(a_team_count) + float(b_team_count) + filter_count_under > float(under):
 		message_text = message_text + "Status : a_team_count + b_team_count + "+str(filter_count_under) +" > under\n"
 		check = False
 
-	if odds > filter_odds:
-		message_text = message_text + "Status : odds > " + str(filter_odds) + "\n"
-		check =  False
+	# if odds > filter_odds:
+	# 	message_text = message_text + "Status : odds > " + str(filter_odds) + "\n"
+	# 	check =  False
 
 	if int(a_team_count) + int(b_team_count) >= filter_count:
 		message_text = message_text + "Status : a_team_count + b_team_count >= " + str(filter_count) + "\n"
@@ -255,6 +270,9 @@ while(True):
 		a_team_count = scores[0].text
 		b_team_count = scores[1].text
 		play_timer = row.find_element_by_css_selector('.ipo-Fixture_GameInfo.ipo-Fixture_Time').text
+		if not timer_check(a_team,b_team,b_team_count,b_team_count,play_timer):
+			continue
+
 		try:
 			row.click()
 			for market in browser.find_elements_by_css_selector('.ipe-Market'):
