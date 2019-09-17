@@ -24,12 +24,12 @@ logger = getLogger(__name__)
 handler = StreamHandler()
 handler = FileHandler(filename="./logs/" + nowdate + ".log")
 handler.setLevel(DEBUG)
-handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s"))
+handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s\n"))
 logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.4.2"
+version = "1.4.3"
 
 filter_time = 60;
 filter_count_under = 4;
@@ -43,17 +43,16 @@ def logger_set():
 	handler = StreamHandler()
 	handler = FileHandler(filename="./logs/" + nowdate + ".log")
 	handler.setLevel(DEBUG)
-	handler.setFormatter(Formatter("%(asctime)s %(levelname)8s %(message)s"))
+	handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s\n"))
 	logger.setLevel(DEBUG)
 	logger.addHandler(handler)
 	logger.propagate = False
 
-def timer_check(a_team,b_team,b_team_count,b_team_count,play_timer):
+def timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
 	time_array = play_timer.split(':')
 	if int(time_array[0]) < filter_time:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-		message_text = "\n"\
-		"[Check Rule]\n"\
+		message_text = "[Check Rule]\n"\
 		"[種目]サッカー\n"\
 		"[試合]" + a_team + " VS " + b_team +  "\n"\
 		"[経過時間]" + play_timer +  "\n"\
@@ -67,8 +66,7 @@ def timer_check(a_team,b_team,b_team_count,b_team_count,play_timer):
 def easy_check(play_timer,a_team,b_team,under,odds):
 	if float(under) < filter_count_under and odds > filter_odds:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-		message_text = "\n"\
-		"[Check Rule]\n"\
+		message_text = "[Check Rule]\n"\
 		"[種目]サッカー\n"\
 		"[試合]" + a_team + " VS " + b_team +  "\n"\
 		"[経過時間]" + play_timer +  "\n"\
@@ -80,8 +78,7 @@ def easy_check(play_timer,a_team,b_team,under,odds):
 
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
 	now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-	message_text = "\n"\
-	"[Check Rule]\n"\
+	message_text = "[Check Rule]\n"\
 	"[種目]サッカー\n"\
 	"[試合]" + a_team + " VS " + b_team +  "\n"\
 	"[経過時間]" + play_timer +  "\n"\
@@ -270,7 +267,7 @@ while(True):
 		a_team_count = scores[0].text
 		b_team_count = scores[1].text
 		play_timer = row.find_element_by_css_selector('.ipo-Fixture_GameInfo.ipo-Fixture_Time').text
-		if not timer_check(a_team,b_team,b_team_count,b_team_count,play_timer):
+		if not timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
 			continue
 
 		try:
