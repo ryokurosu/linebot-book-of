@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.4.0"
+version = "1.4.1"
 
 filter_time = 60;
 filter_count_under = 4;
@@ -49,11 +49,23 @@ def logger_set():
 	logger.propagate = False
 
 
+def easy_check(play_timer,a_team,b_team,under,odds):
+	if float(under) < filter_count_under and odds > filter_odds:
+		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+		message_text = "\n"\
+		"[Check Rule]\n"\
+		"[種目]サッカー\n"\
+		"[試合]" + a_team + " VS " + b_team +  "\n"\
+		"[経過時間]" + play_timer +  "\n"\
+		"[時間]" + now + "\n[Jodge]Easy Check"
+		logger.debug(message_text)
+		return False
+	return True
 
 
 def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds):
 	now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-	message_text = "=======================\n"\
+	message_text = "\n"\
 	"[Check Rule]\n"\
 	"[種目]サッカー\n"\
 	"[試合]" + a_team + " VS " + b_team +  "\n"\
@@ -148,35 +160,33 @@ notified = []
 # 		a.click
 # 		print('click English')
 # 		break
-matchgoal = False
+# matchgoal = False
 
-try:
-	while (not matchgoal):
-		browser.find_element_by_css_selector('.ipo-MarketSwitcher').click()
-		time.sleep(1)
-		divs = browser.find_elements_by_css_selector('.ipo-MarketSwitcherRow')
-		for d in divs:
-			if "Match Goals" == d.find_element_by_css_selector('.ipo-MarketSwitcherRow_Label').text:
-				d.click()
-				matchgoal = True
-				break
-except Exception as e:
-	message_text = "エラーで停止します。"
-	message.send_debug_message(message_text)
-	logger.debug(message_text)
-	time.sleep(1)
-	# os.system("source ~/.bash_profile && sh /home/root/app/cron.sh")
-	browser.quit()
-	sys.exit()
-else:
-	pass
-finally:
-	pass
+# try:
+# 	while (not matchgoal):
+# 		browser.find_element_by_css_selector('.ipo-MarketSwitcher').click()
+# 		time.sleep(1)
+# 		divs = browser.find_elements_by_css_selector('.ipo-MarketSwitcherRow')
+# 		for d in divs:
+# 			if "Match Goals" == d.find_element_by_css_selector('.ipo-MarketSwitcherRow_Label').text:
+# 				d.click()
+# 				matchgoal = True
+# 				break
+# except Exception as e:
+# 	message_text = "エラーで停止します。"
+# 	message.send_debug_message(message_text)
+# 	logger.debug(message_text)
+# 	time.sleep(1)
+# 	# os.system("source ~/.bash_profile && sh /home/root/app/cron.sh")
+# 	browser.quit()
+# 	sys.exit()
+# else:
+# 	pass
+# finally:
+# 	pass
 
 
 loopcount = 0
-time.sleep(1)
-browser.get(startURL)
 
 buttons = browser.find_elements_by_css_selector('.ipo-Classification')
 # Soccer Click
@@ -200,7 +210,7 @@ row_index = 0
 while(True):
 	time.sleep(0.5)
 	loopcount = loopcount + 1
-	logger.debug("===============Loop Count : " + str(loopcount))
+	logger.debug("Loop Count : " + str(loopcount))
 	if loopcount % 300 == 1:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
@@ -248,53 +258,49 @@ while(True):
 		play_timer = row.find_element_by_css_selector('.ipo-Fixture_GameInfo.ipo-Fixture_Time').text
 		try:
 			row.click()
-			if len(browser.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')) < 1 and len(browser.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')) < 1:
-				skip_count = skip_count + 1
-				browser.implicitly_wait(0.5)
-				browser.back()
-				continue
-			under_array = browser.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')
-			odds_array = browser.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')
-			for i in range(len(under_array)):
-				u = under_array[i].text
-				o = odds_array[i].text
-				o = 1 + float(fractions.Fraction(o))
-				o = round(o,2)
+			for market in browser.find_elements_by_css_selector('.ipe-Market'):
+				if "Match Goals" in market.find_element_by_css_selector('.ipe-Market_ButtonText').text:
+					under_array = market.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')
+					odds_array = market.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')
+					for i in range(len(under_array)):
+						under = under_array[i].text
+						input(under)
+						odds = odds_array[i].text
+						odds = 1 + float(fractions.Fraction(odds))
+						odds = round(odds,2)
+						if easy_check(play_timer,a_team,b_team,under,odds) and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
+							message.send_debug_message("HIT!")
+							current_url = browser.current_url
+							now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+							message_text = "------------\nベット対象通知\n------------\n"\
+											"[種目]サッカー\n"\
+						                    "[試合]" + a_team + " VS " + b_team +  "\n"\
+						                    "[経過時間]" + play_timer +  "\n"\
+						                    "[ベット対象]Alternative Match Goals\n"\
+						                    "[カウント]" + str(under) + " under\n"\
+						                    "[オッズ]" + str(odds) + "以下\n"\
+						                    "[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
+						                    "[時間]" + now + "\n"\
+						                    "[URL]" + current_url
+							message.send_all_message(message_text)
+							message.send_debug_message(message_text)
+							logger.debug('send Line Message')
+							logger.debug(message_text)
 
-				if u > filter_count_under and o <= filter_odds and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
-
-					message.send_debug_message("HIT!")
-					current_url = browser.current_url
-					now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-					message_text = "------------\nベット対象通知\n------------\n"\
-									"[種目]サッカー\n"\
-				                    "[試合]" + a_team + " VS " + b_team +  "\n"\
-				                    "[経過時間]" + play_timer +  "\n"\
-				                    "[ベット対象]Alternative Match Goals\n"\
-				                    "[カウント]" + str(under) + " under\n"\
-				                    "[オッズ]" + str(odds) + "以下\n"\
-				                    "[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
-				                    "[時間]" + now + "\n"\
-				                    "[URL]" + current_url
-					message.send_all_message(message_text)
-					message.send_debug_message(message_text)
-					logger.debug('send Line Message')
-					logger.debug(message_text)
-
-					teamset = [a_team,b_team]
-					notified.append(teamset)
-					print("Notified Team List")
-					print(notified)
-					print("=========================")
-					browser.back()
-					continue
+							teamset = [a_team,b_team]
+							notified.append(teamset)
+							print("Notified Team List")
+							print(notified)
+							print("=========================")
+							browser.back()
+							continue
 
 		except Exception as e:
-			browser.back()
+			print(traceback.format_exc())
 		else:
 			pass
 		finally:
-			pass
+			browser.back()
 
 	except Exception as e:
 		skip_count = skip_count + 1
