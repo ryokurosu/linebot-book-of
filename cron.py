@@ -305,8 +305,7 @@ while(True):
 							print("Notified Team List")
 							print(notified)
 							print("=========================")
-							browser.back()
-							continue
+							break
 
 		except Exception as e:
 			print(traceback.format_exc())
