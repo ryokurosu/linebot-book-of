@@ -264,7 +264,6 @@ while(True):
 					odds_array = market.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')
 					for i in range(len(under_array)):
 						under = under_array[i].text
-						input(under)
 						odds = odds_array[i].text
 						odds = 1 + float(fractions.Fraction(odds))
 						odds = round(odds,2)
