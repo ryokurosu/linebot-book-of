@@ -138,7 +138,6 @@ browser.get(firstURL)
 time.sleep(1)
 browser.get(startURL)
 logger.debug(message_text)
-input("")
 time.sleep(1)
 notified = []
 
