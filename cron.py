@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.4.3"
+version = "1.4.4"
 
 filter_time = 60;
 filter_count_under = 4;
@@ -222,7 +222,7 @@ while(True):
 	time.sleep(0.5)
 	loopcount = loopcount + 1
 	logger.debug("Loop Count : " + str(loopcount))
-	if loopcount % 300 == 1:
+	if loopcount % 1000 == 1:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
 		logger.debug(message_text)
