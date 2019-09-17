@@ -31,6 +31,12 @@ logger.propagate = False
 
 version = "1.3.8"
 
+filter_time = 60;
+filter_count_under = 4;
+filter_odds = 1.05;
+filter_count = 5;
+
+
 def logger_set():
 	nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
 	logger = getLogger(__name__)
@@ -52,7 +58,7 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 	"[種目]サッカー\n"\
 	"[試合]" + a_team + " VS " + b_team +  "\n"\
 	"[経過時間]" + play_timer +  "\n"\
-	"[ベット対象]Match Goals\n"\
+	"[ベット対象]Alternative Match Goals\n"\
 	"[カウント]" + str(under) + " under\n"\
 	"[オッズ]" + str(odds) + "以下\n"\
 	"[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
@@ -61,20 +67,20 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 	check = True
 
 	time_array = play_timer.split(':')
-	if int(time_array[0]) < 60:
-		message_text = message_text + "Status : int(time_array[0]) < 60\n"
+	if int(time_array[0]) < filter_time:
+		message_text = message_text + "Status : int(time_array[0]) < " + str(filter_time) + "\n"
 		check =  False
 
-	if float(a_team_count) + float(b_team_count) + 4 > float(under):
-		message_text = message_text + "Status : a_team_count + b_team_count + 4 > under\n"
+	if float(a_team_count) + float(b_team_count) + filter_count_under > float(under):
+		message_text = message_text + "Status : a_team_count + b_team_count + "+str(filter_count_under) +" > under\n"
 		check = False
 
-	if odds > 1.05:
-		message_text = message_text + "Status : odds > 1.05\n"
+	if odds > filter_odds:
+		message_text = message_text + "Status : odds > " + str(filter_odds) + "\n"
 		check =  False
 
-	if int(a_team_count) + int(b_team_count) >= 5:
-		message_text = message_text + "Status : a_team_count + b_team_count >= 5\n"
+	if int(a_team_count) + int(b_team_count) >= filter_count:
+		message_text = message_text + "Status : a_team_count + b_team_count >= " + str(filter_count) + "\n"
 		check = False
 
 	message_text = message_text + "\n=======================\n"
@@ -132,7 +138,7 @@ browser.get(firstURL)
 time.sleep(1)
 browser.get(startURL)
 logger.debug(message_text)
-
+input("")
 time.sleep(1)
 notified = []
 
@@ -229,53 +235,60 @@ while(True):
 			skip_count = 0
 			teams = row.find_elements_by_css_selector('.ipo-Fixture_Truncator')
 			scores = row.find_elements_by_css_selector('.ipo-Fixture_PointField')
-
-			under = row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')[1].text.strip()
-			odds = row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')[1].text.strip()
-
-			odds = 1 + float(fractions.Fraction(odds))
-			odds = round(odds,2)
-
-			play_timer = row.find_element_by_css_selector('.ipo-Fixture_GameInfo.ipo-Fixture_Time').text
 			a_team = teams[0].text
 			b_team = teams[1].text
 			a_team_count = scores[0].text
 			b_team_count = scores[1].text
-
-			if check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
-
-				message.send_debug_message("HIT!")
-				
+			play_timer = row.find_element_by_css_selector('.ipo-Fixture_GameInfo.ipo-Fixture_Time').text
+			try:
 				row.click()
-				time.sleep(2)
-				current_url = browser.current_url
-				now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-				# return url
+				if len(browser.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')) < 1 and len(browser.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')) < 1
+					skip_count = skip_count + 1
+					browser.implicitly_wait(0.5)
+					browser.back()
+					continue
+				under_array = browser.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')
+				odds_array = browser.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')
+				for i in range(len(under_array)):
+					u = under_array[i].text
+					o = odds_array[i].text
+					o = 1 + float(fractions.Fraction(o))
+					o = round(o,2)
+
+					if u > filter_count_under and o <= filter_odds and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
+
+						message.send_debug_message("HIT!")
+						current_url = browser.current_url
+						now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+						message_text = "------------\nベット対象通知\n------------\n"\
+									"[種目]サッカー\n"\
+				                    "[試合]" + a_team + " VS " + b_team +  "\n"\
+				                    "[経過時間]" + play_timer +  "\n"\
+				                    "[ベット対象]Alternative Match Goals\n"\
+				                    "[カウント]" + str(under) + " under\n"\
+				                    "[オッズ]" + str(odds) + "以下\n"\
+				                    "[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
+				                    "[時間]" + now + "\n"\
+				                    "[URL]" + current_url
+						message.send_all_message(message_text)
+						message.send_debug_message(message_text)
+						logger.debug('send Line Message')
+						logger.debug(message_text)
+
+						teamset = [a_team,b_team]
+						notified.append(teamset)
+						print("Notified Team List")
+						print(notified)
+						print("=========================")
+						browser.back()
+						continue
+
+			except Exception as e:
 				browser.back()
-				time.sleep(2)
-
-				message_text = "------------\nベット対象通知\n------------\n"\
-						"[種目]サッカー\n"\
-	                    "[試合]" + a_team + " VS " + b_team +  "\n"\
-	                    "[経過時間]" + play_timer +  "\n"\
-	                    "[ベット対象]Match Goals\n"\
-	                    "[カウント]" + str(under) + " under\n"\
-	                    "[オッズ]" + str(odds) + "以下\n"\
-	                    "[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
-	                    "[時間]" + now + "\n"\
-	                    "[URL]" + current_url
-				message.send_all_message(message_text)
-				message.send_debug_message(message_text)
-				logger.debug('send Line Message')
-				logger.debug(message_text)
-
-				teamset = [a_team,b_team]
-				notified.append(teamset)
-				print("Notified Team List")
-				print(notified)
-				print("=========================")
-				break
-				
+			else:
+				pass
+			finally:
+				pass
 
 		except Exception as e:
 			skip_count = skip_count + 1
