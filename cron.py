@@ -221,11 +221,13 @@ if not check:
 
 
 row_index = 0
+loop_stop = False
 while(True):
 	time.sleep(0.5)
 	loopcount = loopcount + 1
 	logger.debug("Loop Count : " + str(loopcount))
-	if loopcount % 1000 == 1:
+	if loopcount % 1000 == 1 or loop_stop:
+		browser.get(startURL)
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
 		logger.debug(message_text)
@@ -247,7 +249,12 @@ while(True):
 
 	browser.implicitly_wait(3)
 	skip_count = 0
-	
+
+	if len(browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')) < 1:
+		loop_stop = True
+		continue
+	loop_stop = False
+
 	rows = browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')
 	if len(rows) <= row_index:
 		row_index = 0
