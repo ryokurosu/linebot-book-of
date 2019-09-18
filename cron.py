@@ -47,6 +47,7 @@ def logger_set():
 	# logger.setLevel(DEBUG)
 	# logger.addHandler(handler)
 	# logger.propagate = False
+	pass
 
 def timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
 	time_array = play_timer.split(':')
