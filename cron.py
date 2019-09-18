@@ -37,8 +37,9 @@ filter_odds = 1.05;
 filter_count = 5;
 
 
-def logger_set():
-	logger.removeHandler(handler)
+def logger_set(logger):
+	for h in logger.handlers:
+		logger.removeHandler(h)
 	nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
 	logger = getLogger(__name__)
 	handler = StreamHandler()
@@ -48,7 +49,7 @@ def logger_set():
 	logger.setLevel(DEBUG)
 	logger.addHandler(handler)
 	logger.propagate = False
-	pass
+	return logger
 
 def timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
 	time_array = play_timer.split(':')
@@ -229,7 +230,7 @@ while(True):
 		message_text = "Time : " + now + " 正常に稼働中..."
 		logger.debug(message_text)
 		message.send_debug_message(message_text)
-		logger_set()
+		logger = logger_set(logger)
 		check = False
 		time.sleep(1)
 		while(not check):
