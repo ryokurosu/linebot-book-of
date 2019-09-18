@@ -38,15 +38,16 @@ filter_count = 5;
 
 
 def logger_set():
-	# nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
-	# logger = getLogger(__name__)
-	# handler = StreamHandler()
-	# handler = FileHandler(filename="./logs/" + nowdate + ".log")
-	# handler.setLevel(DEBUG)
-	# handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s"))
-	# logger.setLevel(DEBUG)
-	# logger.addHandler(handler)
-	# logger.propagate = False
+	logger.removeHandler(handler)
+	nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
+	logger = getLogger(__name__)
+	handler = StreamHandler()
+	handler = FileHandler(filename="./logs/" + nowdate + ".log")
+	handler.setLevel(DEBUG)
+	handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s"))
+	logger.setLevel(DEBUG)
+	logger.addHandler(handler)
+	logger.propagate = False
 	pass
 
 def timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
@@ -228,15 +229,7 @@ while(True):
 		message_text = "Time : " + now + " 正常に稼働中..."
 		logger.debug(message_text)
 		message.send_debug_message(message_text)
-		nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
-		logger = getLogger(__name__)
-		handler = StreamHandler()
-		handler = FileHandler(filename="./logs/" + nowdate + ".log")
-		handler.setLevel(DEBUG)
-		handler.setFormatter(Formatter("-----------------------\n%(asctime)s %(levelname)8s %(message)s"))
-		logger.setLevel(DEBUG)
-		logger.addHandler(handler)
-		logger.propagate = False
+		logger_set()
 		check = False
 		time.sleep(1)
 		while(not check):
