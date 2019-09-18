@@ -31,7 +31,7 @@ logger.propagate = False
 
 version = "1.4.4"
 
-filter_time = 60;
+filter_time = 70;
 filter_count_under = 4;
 filter_odds = 1.05;
 filter_count = 5;
