@@ -32,6 +32,7 @@ logger.propagate = False
 version = "1.4.4"
 
 filter_time = 70;
+filter_time_after = 90;
 filter_count_under = 4;
 filter_odds = 1.05;
 filter_count = 5;
@@ -53,7 +54,7 @@ def logger_set(logger):
 
 def timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
 	time_array = play_timer.split(':')
-	if int(time_array[0]) < filter_time:
+	if int(time_array[0]) < filter_time or  int(time_array[0]) > filter_time_after:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "[Check Rule]\n"\
 		"[種目]サッカー\n"\
