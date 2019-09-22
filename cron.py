@@ -317,6 +317,7 @@ while(True):
 							print("Notified Team List")
 							print(notified)
 							print("=========================")
+							time.sleep(1)
 							break
 
 		except Exception as e:
