@@ -29,10 +29,10 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.4.4"
+version = "1.4.5"
 
 filter_time = 70;
-filter_time_after = 90;
+filter_time_after = 85;
 filter_count_under = 4;
 filter_odds = 1.05;
 filter_count = 5;
@@ -54,7 +54,7 @@ def logger_set(logger):
 
 def timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
 	time_array = play_timer.split(':')
-	if int(time_array[0]) < filter_time or  int(time_array[0]) > filter_time_after:
+	if int(time_array[0]) < filter_time or int(time_array[0]) > filter_time_after:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "[Check Rule]\n"\
 		"[種目]サッカー\n"\
@@ -68,7 +68,7 @@ def timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
 
 
 def easy_check(play_timer,a_team,b_team,under,odds):
-	if float(under) < filter_count_under and odds > filter_odds:
+	if float(under) < filter_count_under or odds > filter_odds:
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "[Check Rule]\n"\
 		"[種目]サッカー\n"\
