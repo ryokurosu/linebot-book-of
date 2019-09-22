@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.4.5"
+version = "1.4.6"
 
 filter_time = 70;
 filter_time_after = 85;
@@ -294,6 +294,7 @@ while(True):
 						odds = round(odds,2)
 						if easy_check(play_timer,a_team,b_team,under,odds) and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
 							message.send_debug_message("HIT!")
+							time.sleep(1)
 							current_url = browser.current_url
 							now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 							message_text = "------------\nベット対象通知\n------------\n"\
