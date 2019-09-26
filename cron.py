@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.4.7"
+version = "1.5.0"
 
 filter_time = 70;
 filter_time_after = 85;
@@ -74,9 +74,9 @@ def easy_check(play_timer,a_team,b_team,under,odds):
 		"[種目]サッカー\n"\
 		"[試合]" + a_team + " VS " + b_team +  "\n"\
 		"[経過時間]" + play_timer +  "\n"\
-		"[時間]" + now + "\n[Jodge]Easy Check"
+		"[時間]" + now + "\n[Jodge]Easy Check\n"\
+		"[URL]" + browser.current_url
 		logger.debug(message_text)
-		logger.debug(browser.current_url)
 		return False
 	return True
 
@@ -92,6 +92,7 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 	"[オッズ]" + str(odds) + "以下\n"\
 	"[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
 	"[時間]" + now + "\n[Jodge]\n"\
+	"[URL]" + browser.current_url
 
 	check = True
 
@@ -296,7 +297,6 @@ while(True):
 						if easy_check(play_timer,a_team,b_team,under,odds) and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
 							message.send_debug_message("HIT!")
 							time.sleep(1)
-							current_url = browser.current_url
 							now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 							message_text = "------------\nベット対象通知\n------------\n"\
 											"[種目]サッカー\n"\
@@ -307,7 +307,7 @@ while(True):
 						                    "[オッズ]" + str(odds) + "以下\n"\
 						                    "[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
 						                    "[時間]" + now + "\n"\
-						                    "[URL]" + current_url
+						                    "[URL]" + browser.current_url
 							message.send_all_message(message_text)
 							message.send_debug_message(message_text)
 							logger.debug('send Line Message')
