@@ -168,7 +168,6 @@ browser.get(startURL)
 logger.debug(message_text)
 time.sleep(1)
 notified = []
-input("")
 
 
 # alinks = browser.find_elements_by_css_selector('ul.lpnm a.lpdgl')
