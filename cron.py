@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.4.6"
+version = "1.4.7"
 
 filter_time = 70;
 filter_time_after = 85;
@@ -76,6 +76,7 @@ def easy_check(play_timer,a_team,b_team,under,odds):
 		"[経過時間]" + play_timer +  "\n"\
 		"[時間]" + now + "\n[Jodge]Easy Check"
 		logger.debug(message_text)
+		logger.debug(browser.current_url)
 		return False
 	return True
 
@@ -167,6 +168,7 @@ browser.get(startURL)
 logger.debug(message_text)
 time.sleep(1)
 notified = []
+input("")
 
 
 # alinks = browser.find_elements_by_css_selector('ul.lpnm a.lpdgl')
@@ -260,7 +262,7 @@ while(True):
 	if len(rows) <= row_index:
 		row_index = 0
 	row = rows[row_index]
-	row_index = row_index + 1
+	
 
 	if skip_count > 3:
 		break
@@ -334,6 +336,7 @@ while(True):
 	else:
 		pass
 	finally:
+		row_index = row_index + 1
 		pass
 	continue
 
