@@ -29,7 +29,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.5.0"
+version = "1.5.1"
 
 filter_time = 70;
 filter_time_after = 85;
@@ -157,7 +157,11 @@ options.add_experimental_option("mobileEmulation", mobile_emulation)
 # else:
 # 	browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver")),options=options)
 
-browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver")),options=options)
+if os.name == 'nt':
+	browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver.exe")),options=options)
+else:
+	browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver")),options=options)
+
 browser.get("https://www.google.com/?hl=ja")
 time.sleep(1)
 firstURL = "https://mobile.bet365.com/"
@@ -226,7 +230,6 @@ if not check:
 row_index = 0
 loop_stop = False
 while(True):
-	time.sleep(0.5)
 	loopcount = loopcount + 1
 	logger.debug("Loop Count : " + str(loopcount))
 	if loopcount % 1000 == 1 or loop_stop:
@@ -242,9 +245,9 @@ while(True):
 			logger.debug('Searching Soccer...')
 			buttons = browser.find_elements_by_css_selector('.ipo-Classification')
 			for b in buttons:
-				classname = b.find_element_by_css_selector('.ipo-Classification_Name').text
+				classname = b.text
 				if 'Soccer' in classname:
-					b.click
+					b.click()
 					logger.debug('go Soccer Page')
 					check = True
 		
@@ -285,6 +288,7 @@ while(True):
 
 		try:
 			row.click()
+			time.sleep(0.5)
 			for market in browser.find_elements_by_css_selector('.ipe-Market'):
 				if "Match Goals" in market.find_element_by_css_selector('.ipe-Market_ButtonText').text:
 					under_array = market.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')
@@ -296,7 +300,6 @@ while(True):
 						odds = round(odds,2)
 						if easy_check(play_timer,a_team,b_team,under,odds) and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
 							message.send_debug_message("HIT!")
-							time.sleep(1)
 							now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 							message_text = "------------\nベット対象通知\n------------\n"\
 											"[種目]サッカー\n"\
@@ -318,7 +321,6 @@ while(True):
 							print("Notified Team List")
 							print(notified)
 							print("=========================")
-							time.sleep(1)
 							break
 
 		except Exception as e:
