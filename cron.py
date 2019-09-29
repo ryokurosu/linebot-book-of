@@ -233,7 +233,7 @@ loop_stop = False
 while(True):
 	loopcount = loopcount + 1
 	logger.debug("Loop Count : " + str(loopcount))
-	if loopcount % 1000 == 1 or loop_stop:
+	if loopcount % 1000 == 0 or loop_stop:
 		browser.get(startURL)
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
@@ -248,14 +248,17 @@ while(True):
 			logger.debug('Searching Soccer...')
 			buttons = browser.find_elements_by_css_selector('.ipo-Classification')
 			stop_count = stop_count + 1
+			if stop_count > 50:
+				check = True
+				break
+
 			for b in buttons:
 				classname = b.text
 				if 'Soccer' in classname:
 					b.click()
 					logger.debug('go Soccer Page')
 					check = True
-		
-		pass
+					break
 
 	browser.implicitly_wait(3)
 	skip_count = 0
