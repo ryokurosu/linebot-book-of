@@ -19,6 +19,7 @@ import fractions
 import subprocess
 from logging import getLogger, StreamHandler, DEBUG, FileHandler, Formatter
 
+
 nowdate = datetime.datetime.today().strftime("%Y%m%d_%H%M%S")
 logger = getLogger(__name__)
 handler = StreamHandler()
@@ -29,7 +30,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.5.1"
+version = "1.6.0"
 
 filter_time = 70;
 filter_time_after = 85;
@@ -91,8 +92,8 @@ def check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, o
 	"[カウント]" + str(under) + " under\n"\
 	"[オッズ]" + str(odds) + "以下\n"\
 	"[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
-	"[時間]" + now + "\n[Jodge]\n"\
-	"[URL]" + browser.current_url
+	"[時間]" + now + "\n[Jodge]HIT\n"\
+	"[URL]" + browser.current_url + "\n"
 
 	check = True
 
