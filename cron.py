@@ -242,9 +242,12 @@ while(True):
 		logger = logger_set(logger)
 		check = False
 		time.sleep(1)
+
+		stop_count = 0
 		while(not check):
 			logger.debug('Searching Soccer...')
 			buttons = browser.find_elements_by_css_selector('.ipo-Classification')
+			stop_count = stop_count + 1
 			for b in buttons:
 				classname = b.text
 				if 'Soccer' in classname:

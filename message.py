@@ -37,7 +37,7 @@ def send_all_message(message_text):
 
 def send_debug_message(message_text):
 	message_text = app_env + "\n" + message_text
-    debug_line_bot_api.broadcast(TextSendMessage(text=message_text))
+	debug_line_bot_api.broadcast(TextSendMessage(text=message_text))
 
 if __name__ == "__main__":
     send_all_message('hello')
