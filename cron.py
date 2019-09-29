@@ -30,7 +30,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.6.0"
+version = "1.6.1"
 
 filter_time = 70;
 filter_time_after = 85;
@@ -233,7 +233,7 @@ loop_stop = False
 while(True):
 	loopcount = loopcount + 1
 	logger.debug("Loop Count : " + str(loopcount))
-	if loopcount % 1000 == 0 or loop_stop:
+	if loopcount % 5000 == 0 or loop_stop:
 		browser.get(startURL)
 		now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
 		message_text = "Time : " + now + " 正常に稼働中..."
