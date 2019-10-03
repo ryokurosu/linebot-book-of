@@ -303,42 +303,44 @@ while(True):
 			row.click()
 			time.sleep(0.5)
 
-			input("")
+			title = browser.find_element_by_css_selector('.ipe-EventViewTitle_Text.ipe-EventViewTitle_TextArrow').text
 
+			# row が一致しないときのための処理
+			if a_team in title and b_team in title:
+				print(a_team + " v " + b_team)
+				for market in browser.find_elements_by_css_selector('.ipe-Market'):
+					if "Match Goals" in market.find_element_by_css_selector('.ipe-Market_ButtonText').text:
+						under_array = market.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')
+						odds_array = market.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')
+						for i in range(len(under_array)):
+							under = under_array[i].text
+							odds = odds_array[i].text
+							odds = 1 + float(fractions.Fraction(odds))
+							odds = round(odds,2)
+							if easy_check(play_timer,a_team,b_team,under,odds) and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
+								message.send_debug_message("HIT!")
+								now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
+								message_text = "------------\nベット対象通知\n------------\n"\
+												"[種目]サッカー\n"\
+							                    "[試合]" + a_team + " VS " + b_team +  "\n"\
+							                    "[経過時間]" + play_timer +  "\n"\
+							                    "[ベット対象]Alternative Match Goals\n"\
+							                    "[カウント]" + str(under) + " under\n"\
+							                    "[オッズ]" + str(odds) + "以下\n"\
+							                    "[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
+							                    "[時間]" + now + "\n"\
+							                    "[URL]" + browser.current_url
+								message.send_all_message(message_text)
+								message.send_debug_message(message_text)
+								logger.debug('send Line Message')
+								logger.debug(message_text)
 
-			for market in browser.find_elements_by_css_selector('.ipe-Market'):
-				if "Match Goals" in market.find_element_by_css_selector('.ipe-Market_ButtonText').text:
-					under_array = market.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')
-					odds_array = market.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')
-					for i in range(len(under_array)):
-						under = under_array[i].text
-						odds = odds_array[i].text
-						odds = 1 + float(fractions.Fraction(odds))
-						odds = round(odds,2)
-						if easy_check(play_timer,a_team,b_team,under,odds) and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
-							message.send_debug_message("HIT!")
-							now = datetime.datetime.today().strftime("%Y-%m-%d %H:%M:%S")
-							message_text = "------------\nベット対象通知\n------------\n"\
-											"[種目]サッカー\n"\
-						                    "[試合]" + a_team + " VS " + b_team +  "\n"\
-						                    "[経過時間]" + play_timer +  "\n"\
-						                    "[ベット対象]Alternative Match Goals\n"\
-						                    "[カウント]" + str(under) + " under\n"\
-						                    "[オッズ]" + str(odds) + "以下\n"\
-						                    "[スコア]" + str(a_team_count) + " - " + str(b_team_count) + "\n"\
-						                    "[時間]" + now + "\n"\
-						                    "[URL]" + browser.current_url
-							message.send_all_message(message_text)
-							message.send_debug_message(message_text)
-							logger.debug('send Line Message')
-							logger.debug(message_text)
-
-							teamset = [a_team,b_team]
-							notified.append(teamset)
-							print("Notified Team List")
-							print(notified)
-							print("=========================")
-							break
+								teamset = [a_team,b_team]
+								notified.append(teamset)
+								print("Notified Team List")
+								print(notified)
+								print("=========================")
+								break
 
 		except Exception as e:
 			print(traceback.format_exc())
