@@ -30,10 +30,10 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.6.2"
+version = "1.6.3"
 
 filter_time = 70;
-filter_time_after = 85;
+filter_time_after = 88;
 filter_count_under = 4;
 filter_odds = 1.05;
 filter_count = 5;
@@ -294,13 +294,18 @@ while(True):
 
 		try:
 			# row が一致しないときのための処理
-			for fixture in browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture'):
-				teams = fixture.find_elements_by_css_selector('.ipo-Fixture_Truncator')
-				if a_team == teams[0].text and b_team == teams[1].text:
-					fixture.click()
-					break;
-
+			# ↓意味無し
+			# for fixture in browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture'):
+			# 	teams = fixture.find_elements_by_css_selector('.ipo-Fixture_Truncator')
+			# 	if a_team == teams[0].text and b_team == teams[1].text:
+			# 		fixture.click()
+			# 		break;
+			row.click()
 			time.sleep(0.5)
+
+			input("")
+
+
 			for market in browser.find_elements_by_css_selector('.ipe-Market'):
 				if "Match Goals" in market.find_element_by_css_selector('.ipe-Market_ButtonText').text:
 					under_array = market.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')
