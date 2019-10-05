@@ -235,6 +235,8 @@ while(True):
 	logger.debug("Loop Count : " + str(loopcount))
 	if loopcount % 100000 == 0 or loop_stop:
 
+		browser.get(startURL)
+
 		for b in browser.find_elements_by_css_selector('.hm-TabletNavButtons_Link'):
 			if "In-Play" in b.text:
 				b.click()
