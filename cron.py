@@ -279,15 +279,7 @@ while(True):
 	rows = browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')
 	if len(rows) <= row_index:
 		row_index = 0
-		try:
-			row = rows[row_index]
-		except Exception as e:
-			continue
-		else:
-			pass
-		finally:
-			pass
-	
+	row = rows[row_index]
 
 	if skip_count > 3:
 		break
