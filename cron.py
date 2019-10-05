@@ -30,7 +30,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.6.4"
+version = "1.6.5"
 
 filter_time = 70;
 filter_time_after = 88;
@@ -63,7 +63,7 @@ def timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
 		"[経過時間]" + play_timer +  "\n"\
 		"[ベット対象]Alternative Match Goals\n"\
 		"[時間]" + now + "\n[Jodge]Timer Check"
-		logger.debug(message_text)
+		# logger.debug(message_text)
 		return False
 	return True
 
@@ -233,7 +233,7 @@ loop_stop = False
 while(True):
 	loopcount = loopcount + 1
 	logger.debug("Loop Count : " + str(loopcount))
-	if loopcount % 5000 == 0 or loop_stop:
+	if loopcount % 100000 == 0 or loop_stop:
 
 		for b in browser.find_elements_by_css_selector('.hm-TabletNavButtons_Link'):
 			if "In-Play" in b.text:

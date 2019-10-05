@@ -28,16 +28,40 @@ else:
 	app_env = "本番用"
 
 def send_group_message(group_id,message_text):
-    line_bot_api.push_message(
+    try:
+        line_bot_api.push_message(
         group_id,
         TextSendMessage(text=message_text))
+    except Exception as e:
+        pass
+    else:
+        pass
+    finally:
+        pass
+    
 
 def send_all_message(message_text):
-    line_bot_api.broadcast(TextSendMessage(text=message_text))
+    try:
+        line_bot_api.broadcast(TextSendMessage(text=message_text))
+    except Exception as e:
+        pass
+    else:
+        pass
+    finally:
+        pass
+    
 
 def send_debug_message(message_text):
-	message_text = app_env + "\n" + message_text
-	debug_line_bot_api.broadcast(TextSendMessage(text=message_text))
+    try:
+        message_text = app_env + "\n" + message_text
+        debug_line_bot_api.broadcast(TextSendMessage(text=message_text))
+    except Exception as e:
+        pass
+    else:
+        pass
+    finally:
+        pass
+	
 
 if __name__ == "__main__":
     send_all_message('hello')
