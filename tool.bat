@@ -1,6 +1,6 @@
 git pull origin master
 cd wenv/Scripts
-activate.bat
+call activate.bat
 cd ..
 cd ..
 start python cron.py
