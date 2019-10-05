@@ -274,6 +274,7 @@ while(True):
 	rows = browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')
 	if len(rows) == 0:
 		loop_stop_count = loop_stop_count + 1
+		time.sleep(0.1)
 		continue
 	elif len(rows) <= row_index:
 		row_index = 0
