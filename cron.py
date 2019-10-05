@@ -30,7 +30,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.6.6"
+version = "1.6.7"
 
 filter_time = 70;
 filter_time_after = 88;
@@ -234,6 +234,7 @@ while(True):
 	loopcount = loopcount + 1
 	logger.debug("Loop Count : " + str(loopcount))
 	if loopcount % 100000 == 0 or loop_stop_count > 30:
+		loopcount = 1
 		print(loop_stop_count)
 		browser.get(startURL)
 
@@ -267,6 +268,9 @@ while(True):
 					logger.debug('go Soccer Page')
 					check = True
 					break
+	elif loopcount % 10000 == 0:
+		logger = logger_set(logger)
+		pass
 
 	browser.implicitly_wait(3)
 	skip_count = 0
@@ -353,9 +357,7 @@ while(True):
 								print("=========================")
 								browser.back()
 								break
-			else:
-				browser.back()
-				continue
+			browser.back()
 
 		except Exception as e:
 			print(traceback.format_exc())
