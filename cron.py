@@ -234,7 +234,7 @@ while(True):
 	loopcount = loopcount + 1
 	logger.debug("Loop Count : " + str(loopcount))
 	if loopcount % 100000 == 0 or loop_stop:
-
+		print(loop_stop)
 		browser.get(startURL)
 
 		for b in browser.find_elements_by_css_selector('.hm-TabletNavButtons_Link'):
@@ -271,14 +271,16 @@ while(True):
 	browser.implicitly_wait(3)
 	skip_count = 0
 
-	if len(browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')) < 1:
+	rows = browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')
+	if len(rows) == 0:
 		loop_stop = True
 		continue
+	elif len(rows) <= row_index:
+		row_index = 0
+		pass
+
 	loop_stop = False
 
-	rows = browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')
-	if len(rows) <= row_index:
-		row_index = 0
 	row = rows[row_index]
 
 	if skip_count > 3:
