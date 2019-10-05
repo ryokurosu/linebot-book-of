@@ -356,14 +356,19 @@ while(True):
 								print("Notified Team List")
 								print(notified)
 								print("=========================")
+								browser.back()
 								break
+			else:
+				browser.back()
+				continue
 
 		except Exception as e:
 			print(traceback.format_exc())
+			browser.get(startURL)
 		else:
 			pass
 		finally:
-			browser.back()
+			pass
 
 	except Exception as e:
 		skip_count = skip_count + 1
