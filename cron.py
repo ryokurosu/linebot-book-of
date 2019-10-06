@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 import urllib.parse
 import time
 import random
@@ -30,7 +31,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.6.7"
+version = "1.6.8"
 
 filter_time = 70;
 filter_time_after = 88;
@@ -233,7 +234,7 @@ loop_stop_count = 0
 while(True):
 	loopcount = loopcount + 1
 	logger.debug("Loop Count : " + str(loopcount))
-	if loopcount % 100000 == 0 or loop_stop_count > 30:
+	if loopcount % 30000 == 0 or loop_stop_count > 30:
 		loopcount = 1
 		print(loop_stop_count)
 		browser.get(startURL)
@@ -275,7 +276,7 @@ while(True):
 	browser.implicitly_wait(3)
 	skip_count = 0
 
-	rows = browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture')
+	rows = browser.find_elements_by_css_selector('.ipo-FixtureList .ipo-Fixture.ipo-Fixture_TimedFixture')
 	if len(rows) == 0:
 		loop_stop_count = loop_stop_count + 1
 		time.sleep(0.1)
@@ -315,6 +316,8 @@ while(True):
 			# 	if a_team == teams[0].text and b_team == teams[1].text:
 			# 		fixture.click()
 			# 		break;
+			action = ActionChains(browser)
+			action.move_to_element(row).perform()
 			row.click()
 			time.sleep(0.5)
 
