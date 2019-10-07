@@ -31,7 +31,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.6.8"
+version = "1.6.9"
 
 filter_time = 70;
 filter_time_after = 88;
@@ -234,9 +234,8 @@ loop_stop_count = 0
 while(True):
 	loopcount = loopcount + 1
 	logger.debug("Loop Count : " + str(loopcount))
-	if loopcount % 30000 == 0 or loop_stop_count > 30:
-		loopcount = 1
-		print(loop_stop_count)
+	if loopcount % 30000 == 0:
+		
 		browser.get(startURL)
 
 		for b in browser.find_elements_by_css_selector('.hm-TabletNavButtons_Link'):
@@ -269,8 +268,36 @@ while(True):
 					logger.debug('go Soccer Page')
 					check = True
 					break
-	elif loopcount % 10000 == 0:
+	elif loopcount % 10000 == 0 or loop_stop_count > 30:
+		print(loop_stop_count)
+		browser.get(startURL)
 		logger = logger_set(logger)
+		
+		for b in browser.find_elements_by_css_selector('.hm-TabletNavButtons_Link'):
+			if "In-Play" in b.text:
+				b.click()
+
+		check = False
+		time.sleep(1)
+
+		stop_count = 0
+		while(not check):
+			logger.debug('Searching Soccer...')
+			buttons = browser.find_elements_by_css_selector('.ipo-ClassificationMenuBase .ipo-Classification')
+			stop_count = stop_count + 1
+			if stop_count > 50:
+				check = True
+				break
+
+			for b in buttons:
+				classname = b.text
+				if 'Soccer' in classname:
+					b.click()
+					logger.debug('go Soccer Page')
+					check = True
+					break
+
+		
 		pass
 
 	browser.implicitly_wait(3)
