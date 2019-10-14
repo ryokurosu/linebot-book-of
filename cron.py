@@ -31,9 +31,9 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.6.9"
+version = "1.6.10"
 
-filter_time = 70;
+filter_time = 65;
 filter_time_after = 88;
 filter_count_under = 4;
 filter_odds = 1.05;
