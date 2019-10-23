@@ -31,7 +31,7 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.6.10"
+version = "1.6.11"
 
 filter_time = 65;
 filter_time_after = 88;
@@ -405,6 +405,7 @@ while(True):
 		pass
 	finally:
 		row_index = row_index + 1
+		del rows
 		pass
 	continue
 
