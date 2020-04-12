@@ -1,4 +1,3 @@
-git pull origin master
 cd wenv/Scripts
 call activate.bat
 cd ..
