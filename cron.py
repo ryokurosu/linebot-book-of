@@ -33,11 +33,11 @@ logger.propagate = False
 
 version = "1.6.11"
 
-filter_time = 65;
-filter_time_after = 75;
-filter_count_under = 4;
-filter_odds = 1.05;
-filter_count = 5;
+filter_time = 65
+filter_time_after = 75
+filter_count_under = 4
+filter_odds = 1.05
+filter_count = 5
 
 
 def logger_set(logger):
