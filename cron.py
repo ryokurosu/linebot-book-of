@@ -14,6 +14,7 @@ import datetime
 import re
 import os
 import sys
+import json
 import message
 import traceback
 import fractions
@@ -31,13 +32,21 @@ logger.setLevel(DEBUG)
 logger.addHandler(handler)
 logger.propagate = False
 
-version = "1.6.11"
+version = "1.7.1"
 
-filter_time = 65
-filter_time_after = 75
-filter_count_under = 4
-filter_odds = 1.05
-filter_count = 5
+filter_setting = json.load(open('./settings.txt',encoding="utf-8"))
+
+# filter_time = 65
+# filter_time_after = 75
+# filter_count_under = 4
+# filter_odds = 1.05
+# filter_count = 5
+# 
+filter_time = int(filter_setting['filter_time'])
+filter_time_after = int(filter_setting['filter_time_after'])
+filter_count_under = int(filter_setting['filter_count_under'])
+filter_odds = float(filter_setting['filter_odds'])
+filter_count = int(filter_setting['filter_count'])
 
 
 def logger_set(logger):
@@ -134,22 +143,17 @@ logger.debug(message_text)
 message.send_debug_message(message_text)
 
 
-uas = ["Mozilla/5.0 (iPad; CPU OS 11_0 like Mac OS X) AppleWebKit/604.1.34 (KHTML, like Gecko) Version/11.0 Mobile/15A5341f Safari/604.1",
-"Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1",
-"Mozilla/5.0 (Linux; Android 5.0; SM-G900P Build/LRX21T) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Mobile Safari/537.36",
-"Mozilla/5.0 (Linux; U; Android 4.3; en-us; SM-N900T Build/JSS15J) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30",
-"Mozilla/5.0 (Linux; Android 8.0; Pixel 2 Build/OPD3.170816.012) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Mobile Safari/537.36"]
 # random.shuffle(uas)
 
 base = os.path.dirname(os.path.abspath(__file__))
 options = webdriver.ChromeOptions()
-mobile_emulation = {
-    "deviceMetrics": { "width": 1024, "height": 1366, "pixelRatio": 3.0 },
-    "userAgent": uas[0] }
-options.add_argument('--no-sandbox')
+options.add_experimental_option("excludeSwitches", ["enable-automation"])
+options.add_experimental_option('useAutomationExtension', False)
+
+# options.add_argument('--no-sandbox')
 options.add_argument('--lang=ja-JP')
-options.add_argument("--incognito")
-options.add_experimental_option("mobileEmulation", mobile_emulation)
+
+# options.add_experimental_option("mobileEmulation", mobile_emulation)
 # options.add_experimental_option("excludeSwitches", ["enable-automation"])
 # options.add_experimental_option('useAutomationExtension', False)
 
@@ -164,10 +168,30 @@ if os.name == 'nt':
 else:
 	browser = webdriver.Chrome(os.path.normpath(os.path.join(base, "./chromedriver")),options=options)
 
+browser.execute_cdp_cmd("Page.addScriptToEvaluateOnNewDocument", {
+
+"source": """
+
+Object.defineProperty(navigator, 'webdriver', {
+
+get: () => undefined
+
+})
+
+"""
+
+})
+
+browser.execute_cdp_cmd('Network.setUserAgentOverride',
+
+{"userAgent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.53 Safari/537.36'})
+
+
 browser.get("https://www.google.com/?hl=ja")
+# input()
 time.sleep(1)
-firstURL = "https://mobile.bet365.com/"
-startURL = "https://mobile.bet365.com/?nr=1#/IP/"
+firstURL = "https://www.bet365.com/"
+startURL = "https://www.bet365.com/?nr=1#/IP/"
 browser.implicitly_wait(3)
 browser.get(firstURL)
 time.sleep(1)
@@ -177,47 +201,14 @@ time.sleep(1)
 notified = []
 
 
-# alinks = browser.find_elements_by_css_selector('ul.lpnm a.lpdgl')
-# for a in alinks:
-# 	if a.text == "English":
-# 		a.click
-# 		print('click English')
-# 		break
-# matchgoal = False
-
-# try:
-# 	while (not matchgoal):
-# 		browser.find_element_by_css_selector('.ipo-MarketSwitcher').click()
-# 		time.sleep(1)
-# 		divs = browser.find_elements_by_css_selector('.ipo-MarketSwitcherRow')
-# 		for d in divs:
-# 			if "Match Goals" == d.find_element_by_css_selector('.ipo-MarketSwitcherRow_Label').text:
-# 				d.click()
-# 				matchgoal = True
-# 				break
-# except Exception as e:
-# 	message_text = "エラーで停止します。"
-# 	message.send_debug_message(message_text)
-# 	logger.debug(message_text)
-# 	time.sleep(1)
-# 	# os.system("source ~/.bash_profile && sh /home/root/app/cron.sh")
-# 	browser.quit()
-# 	sys.exit()
-# else:
-# 	pass
-# finally:
-# 	pass
-
-
 loopcount = 0
 
-buttons = browser.find_elements_by_css_selector('.ipo-Classification')
+buttons = browser.find_elements_by_css_selector('.ovm-ClassificationBarButton')
 # Soccer Click
 check = False
 for b in buttons:
-	classname = b.find_element_by_css_selector('.ipo-Classification_Name').text
-	if 'Soccer' in classname:
-		b.click
+	if 'Soccer' in b.text:
+		b.click()
 		logger.debug('go Soccer Page')
 		check = True
 		break
@@ -238,7 +229,7 @@ while(True):
 		
 		browser.get(startURL)
 
-		for b in browser.find_elements_by_css_selector('.hm-TabletNavButtons_Link'):
+		for b in browser.find_elements_by_css_selector('.hm-HeaderMenuItem_Link '):
 			if "In-Play" in b.text:
 				b.click()
 
@@ -255,7 +246,7 @@ while(True):
 		stop_count = 0
 		while(not check):
 			logger.debug('Searching Soccer...')
-			buttons = browser.find_elements_by_css_selector('.ipo-ClassificationMenuBase .ipo-Classification')
+			buttons = browser.find_elements_by_css_selector('.ovm-ClassificationBarButton')
 			stop_count = stop_count + 1
 			if stop_count > 50:
 				check = True
@@ -273,7 +264,7 @@ while(True):
 		browser.get(startURL)
 		logger = logger_set(logger)
 		
-		for b in browser.find_elements_by_css_selector('.hm-TabletNavButtons_Link'):
+		for b in browser.find_elements_by_css_selector('.hm-HeaderMenuItem_Link '):
 			if "In-Play" in b.text:
 				b.click()
 
@@ -283,7 +274,7 @@ while(True):
 		stop_count = 0
 		while(not check):
 			logger.debug('Searching Soccer...')
-			buttons = browser.find_elements_by_css_selector('.ipo-ClassificationMenuBase .ipo-Classification')
+			buttons = browser.find_elements_by_css_selector('.ovm-ClassificationBarButton')
 			stop_count = stop_count + 1
 			if stop_count > 50:
 				check = True
@@ -303,7 +294,7 @@ while(True):
 	browser.implicitly_wait(3)
 	skip_count = 0
 
-	rows = browser.find_elements_by_css_selector('.ipo-FixtureList .ipo-Fixture.ipo-Fixture_TimedFixture')
+	rows = browser.find_elements_by_css_selector('.ovm-Fixture_Container')
 	if len(rows) == 0:
 		loop_stop_count = loop_stop_count + 1
 		time.sleep(0.1)
@@ -315,48 +306,45 @@ while(True):
 	loop_stop_count = 0
 
 	row = rows[row_index]
+	data = row.text.split('\n')
 
 	if skip_count > 3:
 		break
 
 	try:
-		if len(row.find_elements_by_css_selector('.ipo-Fixture_Truncator')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) < 2 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppName')) > 0 and len(row.find_elements_by_css_selector('.ipo-Participant .ipo-Participant_OppOdds')) > 0:
+		if len(data) != 9:
 			skip_count = skip_count + 1
 			browser.implicitly_wait(0.5)
 			continue
+
 		skip_count = 0
-		teams = row.find_elements_by_css_selector('.ipo-Fixture_Truncator')
-		scores = row.find_elements_by_css_selector('.ipo-Fixture_PointField')
-		a_team = teams[0].text
-		b_team = teams[1].text
-		a_team_count = scores[0].text
-		b_team_count = scores[1].text
-		play_timer = row.find_element_by_css_selector('.ipo-Fixture_GameInfo.ipo-Fixture_Time').text
+		a_team = data[0]
+		b_team = data[1]
+		a_team_count = data[2]
+		b_team_count = data[3]
+		play_timer = data[4]
 		if not timer_check(a_team,b_team,a_team_count,b_team_count,play_timer):
 			continue
 
 		try:
-			# row が一致しないときのための処理
-			# ↓意味無し
-			# for fixture in browser.find_elements_by_css_selector('.ipo-Fixture.ipo-Fixture_TimedFixture'):
-			# 	teams = fixture.find_elements_by_css_selector('.ipo-Fixture_Truncator')
-			# 	if a_team == teams[0].text and b_team == teams[1].text:
-			# 		fixture.click()
-			# 		break;
 			action = ActionChains(browser)
 			action.move_to_element(row).perform()
-			row.click()
+			row.find_element_by_css_selector('.ovm-FixtureDetailsTwoWay_TeamsAndScoresWrapper').click()
 			time.sleep(0.5)
 
-			title = browser.find_element_by_css_selector('.ipe-EventViewTitle_Text.ipe-EventViewTitle_TextArrow').text
+			title = browser.find_element_by_css_selector('.ipe-EventHeader_Fixture').text
 
 			# row が一致しないときのための処理
 			if a_team in title and b_team in title:
 				print(a_team + " v " + b_team)
-				for market in browser.find_elements_by_css_selector('.ipe-Market'):
-					if "Match Goals" in market.find_element_by_css_selector('.ipe-Market_ButtonText').text:
-						under_array = market.find_elements_by_css_selector('.ipe-Column_Layout-1 .ipe-Participant_Suspended')
-						odds_array = market.find_elements_by_css_selector('.ipe-Column_CSSHook-S10:last-child .ipe-Participant')
+				for market in browser.find_elements_by_css_selector('.sip-MarketGroup'):
+					betfields = market.text.split('\n')
+
+					# if "Match Goals" in market.find_element_by_css_selector('.ipe-Market_ButtonText').text:
+					if "Alternative Match Goals" in betfields[0]:
+						under_array = market.find_elements_by_css_selector('.srb-ParticipantLabelCentered_Name')
+						odds_array = market.find_elements_by_css_selector('.gl-Market_General-lastinrow .gl-ParticipantOddsOnly_Odds')
+
 						for i in range(len(under_array)):
 							under = under_array[i].text
 							odds = odds_array[i].text
@@ -385,9 +373,11 @@ while(True):
 								print("Notified Team List")
 								print(notified)
 								print("=========================")
-								browser.back()
+								browser.get(startURL)
 								break
-			browser.back()
+						break;
+
+			browser.get(startURL)
 
 		except Exception as e:
 			print(traceback.format_exc())
