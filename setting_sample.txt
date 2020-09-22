@@ -1,0 +1,7 @@
+{
+    "filter_time" : 65,
+    "filter_time_after" : 75,
+    "filter_count_under" : 4,
+    "filter_odds" : 1.05,
+    "filter_count" : 5
+}
