@@ -196,6 +196,7 @@ browser.implicitly_wait(3)
 browser.get(firstURL)
 time.sleep(1)
 browser.get(startURL)
+browser.maximize_window()
 logger.debug(message_text)
 time.sleep(1)
 notified = []
