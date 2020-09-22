@@ -1,4 +1,5 @@
 cd wenv/Scripts
+git pull
 call activate.bat
 cd ..
 cd ..
