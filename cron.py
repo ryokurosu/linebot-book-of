@@ -349,7 +349,8 @@ while(True):
 						for i in range(len(under_array)):
 							under = under_array[i].text
 							odds = odds_array[i].text
-							odds = 1 + float(fractions.Fraction(odds))
+							# odds = 1 + float(fractions.Fraction(odds))
+							odds = float(fractions.Fraction(odds))
 							odds = round(odds,2)
 							if easy_check(play_timer,a_team,b_team,under,odds) and check_rules(play_timer, a_team, b_team, a_team_count, b_team_count, under, odds) and not check_notified(a_team,b_team,notified):
 								message.send_debug_message("HIT!")
