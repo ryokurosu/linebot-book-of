@@ -265,10 +265,17 @@ while(True):
 		browser.get(startURL)
 		logger = logger_set(logger)
 		
-		for b in browser.find_elements_by_css_selector('.hm-HeaderMenuItem_Link '):
+		for b in browser.find_elements_by_css_selector('.hm-HeaderMenuItem_Link'):
 			if "In-Play" in b.text:
-				b.click()
-
+				try:
+					b.click()
+				except Exception as e:
+					pass
+				else:
+					pass
+				finally:
+					pass
+				
 		check = False
 		time.sleep(1)
 
